@@ -58,7 +58,7 @@ biom.as.csv <- function(path){
   row.names(comm) <- tax1
   
   write.csv(comm, "./feature_table.csv")
-  write.csv(tax, "taxonomy.csv")
+  write.csv(tax, "taxonomy.csv", row.names=F)
 }
 
 
@@ -72,7 +72,7 @@ bact.tax <- function(taxonomy, database=NULL){
   require(dplyr)
   
   splt <- function(x){
-    y <- strsplit(x, split="; ", fixed=TRUE)
+    y <- strsplit(x, split=";", fixed=TRUE)
   }
   
   trim <- function(x){ #where x is a character string
@@ -238,6 +238,7 @@ bact.tax <- function(taxonomy, database=NULL){
   }
   
   evened <- sapply(trimmed, FUN=add)
+  #return(evened)
   
   named <- apply(evened, MARGIN=2, FUN=org)
   names(named) <- NULL
@@ -264,8 +265,12 @@ bact.tax <- function(taxonomy, database=NULL){
   classified <- as.data.frame(t(evened), row.names=1:dim(evened)[2])
   names(classified) <- c("kingdom", "phylum", "class", "order", "family", "genus", "species")
   
+  
   out <- data.frame(out, classified)
   
+  out$phylum <- as.character(out$phylum)
+  out$phylum[out$phylum=="Deinococcus"] <- "Deinococcus-Thermus"
+  out$phylum <- as.factor(out$phylum)
   
   #if genus-species not available, use smallest level possible (but not strain codes; 
   #use regular expressions to pull out any names given as alphanumeric codes)
@@ -283,7 +288,7 @@ bact.tax <- function(taxonomy, database=NULL){
 pcoa.plotting <- function(dist, meta, group, colors="rainbow", method="", axes=c(1,2,3), fixed=NULL){
   
   
-  pkgs <- c("dplyr", "ape", "ggplot2", "gridExtra", "RColorBrewer", "pairwiseAdonis")
+  pkgs <- c("dplyr", "ape", "ggplot2", "gridExtra", "RColorBrewer", "pairwiseAdonis", "ggpubr")
   if (any(!pkgs%in%row.names(installed.packages()))) {
     if (!"pairwiseAdonis"%in%row.names(installed.packages())){
       devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
@@ -295,6 +300,7 @@ pcoa.plotting <- function(dist, meta, group, colors="rainbow", method="", axes=c
   require(ape)
   require(ggplot2)
   require(gridExtra)
+  require(ggpubr)
   
   if(dir.exists("./coreplots/")==FALSE){
     dir.create("./coreplots/")
@@ -334,20 +340,27 @@ pcoa.plotting <- function(dist, meta, group, colors="rainbow", method="", axes=c
   twPCOA <- data.frame(twPCoA$vectors)
   new_names <- rep("", ncol(twPCOA))
   for(i in 1:ncol(twPCOA)){
-    new_names[i] <- paste("PCo",i, sep="")
+    new_names[i] <- paste("PC",i, sep="")
   }
   names(twPCOA) <- new_names
   
   twPCOA <- left_join(data.frame(twPCOA, sample=row.names(twPCOA)), 
-                      meta[,c(1,g)])
+                      meta[,c(id,g)])
   
-  
+  g2 <- which(names(twPCOA)==group)
   
   if (colors=="rainbow"){
     palette(c("magenta", "red", "orange", "yellow", "lawngreen", "mediumturquoise", "dodgerblue3", "navy", "blueviolet"))
     if (length(unique(as.factor(meta[,g]))) > 9){
       palette(colorRampPalette(palette())(length(unique(as.factor(twPCOA[,g2])))))
     }
+  }
+  if (colors=="default"){
+    gg_color_hue <- function(n) {
+      hues = seq(15, 375, length = n)
+      hcl(h = hues, l = 65, c = 100)[1:n]
+    }
+    palette(gg_color_hue(length(unique(as.factor(meta[,g])))))
   }
   if (colors=="blind"){
     palette(c("#0072B2", "#D55E00", "#CC79A7", "#E69F00", "#999999", "#56B4E9", "#009E73", "#F0E442"))
@@ -487,18 +500,25 @@ pcoa.plotting <- function(dist, meta, group, colors="rainbow", method="", axes=c
                        paste(names(twPCOA)[axes[2]],"(", as.character(varexp[axes[2]]), "%)"), "\n",
                        paste(names(twPCOA)[axes[3]],"(", as.character(varexp[axes[3]]), "%)"), sep=""))
   
+  pleg <- as_ggplot(get_legend(p12))
+  
+  
+  
   tiff(paste("./coreplots/pcoa/PCOA_", as.character(axes)[1], as.character(axes)[2], 
              as.character(axes)[3], paste(deparse(substitute(dist)), group, sep="_"), 
              ".tiff", sep=""),
        width=9000, height=4000, res=600)
-  grid.arrange(p12, p13, p23, newpage=FALSE, nrow=1, ncol=3)
+  pp <- arrangeGrob(p12+guides(fill=F), p13+guides(fill=F), p23+guides(fill=F), pleg, 
+              layout_matrix=rbind(c(1,2,3), c(1,2,3), c(4,4,4)))
+  #grid.arrange(p12, p13, p23, newpage=FALSE, nrow=1, ncol=3)
+  grid.arrange(pp)
   dev.off()
   
   
   sink(paste("./coreplots/pcoa/PCOA_", as.character(axes)[1], as.character(axes)[2], 
              as.character(axes)[3], paste(deparse(substitute(dist)), group, sep="_"), 
              ".txt", sep=""))
-  print(pairwiseAdonis::pairwise.adonis(dist, twPCOA[,dim(twPCOA)[2]]))
+  print(pairwiseAdonis::pairwise.adonis(dist, twPCOA[,g2]))
   sink()
   
 }
@@ -591,7 +611,7 @@ core.id <- function(comm, meta, tax, group, subgroup, margin){
 
 
 core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="tag", threshold=NULL, margin, 
-                       date, core.only=FALSE, fixed=FALSE, landscape=TRUE, view.all=FALSE){
+                       date, core.only=FALSE, fixed=FALSE, landscape=TRUE, view.all=FALSE, facet=FALSE){
   
   cran <- c("dplyr", "RColorBrewer", "ggplot2")
   if (any(!cran%in%row.names(installed.packages()))) {
@@ -602,7 +622,7 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
   require(RColorBrewer)
   
   colors <- c("#330033", "#F0E442", "#0072B2", "#FF0033", "#FF9933", "#999999", "#56B4E9", "#FFCC00", "#00FF00", "#FF66FF", "#666666")
-  
+
   if(dir.exists("./coreplots/")==FALSE){
     dir.create("./coreplots/")
   }
@@ -784,23 +804,30 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
           pull <- which(unlist(list[[i]][j:length(list[[i]])])%in%unlist(list[[i]][1:j-1])==FALSE)
           pull <- unlist(list[[i]][j:length(list[[i]])], use.names = FALSE)[pull]
           pool <- data.frame(count=rep(1, length(pull)), otu=pull)
-          
-          otus <- names(which(summary(pool$otu)==
+
+          otus <- names(which(summary(pool$otu)== ##Note: this line means that the function ignores if some age groups don't meet the occurence margin parameter
                                 length(which(is.na(list[[i]][j:length(list[[i]])])==FALSE))))
-          
+          #cat(paste0(names(list)[i], ": ", names(list[[i]][j]), "-->", names(list[[i]][length(list[[i]])])), otus, sep="\n")
+          if ("(Other)"%in%otus){otus <- otus[-length(otus)]}
           if (length(otus)>0 & length(which(is.na(list[[i]])==FALSE))>=1){
             sub <- data[which(data[,g]==names(list[i])),
                         which(names(data)%in%c(subgroup, otus))]
             
             if (is.null(tax)==FALSE){
+              otus <- otus[match(names(sub)[-1], otus)]
               otus <- data.frame(v1=c(1:length(otus)), v2=otus)
               otus <- left_join(otus, tax, by=c("v2"="tag"))
               
+                
               if (hi.tax%in%names(tax)){
                 get <- which(names(otus)==hi.tax)
                 otus <- as.character(unlist(otus[,get]))
               } else {otus <- as.character(otus$otu.name)}
               
+              #if (length(otus)!=dim(t(sub[,-1]))[1]){return(list(features=otus, comm=t(sub[,-1])))}
+              #if (length(otus)!=dim(t(sub[,-1]))[1]){return(summary(pool$otu))}
+              
+              #otus <- otus[!is.na(otus)] ##This prevents the summary(pool$otu) from trying to return "(Other)" as an otu by accident
               grouped <- data.frame(features=otus, t(sub[,-1]))
               
               grouped <- grouped %>%
@@ -821,7 +848,7 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
             if (is.null(tax)==TRUE){
               grouped <- sub
             }
-            
+            #if (i==5 & j==4){return(pool)}
             grouped <- reshape(grouped, varying=otus,
                                v.names="rel.abund",
                                timevar="otu",
@@ -867,13 +894,17 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
     }
     df <- rbind(df, group.core)
     
-    write.csv(group.core, paste("./coreplots/profiles/", names(list)[i], date, "_", 
-                                threshold, "_", as.character(margin), ".csv", sep=""))
+  }
     
+    colors <- colorRampPalette(colors)(length(unique(df$otu)))
+    names(colors) <- sort(as.character(unique(df$otu)))
+  
+  for (i in unique(df$groupvar)){
+    
+    group.core <- subset(df, groupvar==i)
     
     
     face <- c(floor(length(unique(group.core$core))/3), ceiling(length(unique(group.core$core))/3))
-    r <- expression(gcd(h, w))
     kh <- 1
     
     if (face[2]>face[1]){
@@ -889,9 +920,6 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
     if (dim(group.core)[1]==0){next}
     group.core <- group.core[which(group.core$core%in%names(summary(group.core$core)[which(summary(group.core$core)!=1)])),]
     group.core$core <- factor(group.core$core)
-    
-    h <- 800*length(unique(group.core$core))+1200
-    w <- 1000*(ceiling(length(levels(group.core[,1]))/2))+800
     
     fexp <- expression(facet_grid(core~., drop=TRUE))
     fexp2 <- expression(facet_grid(groupvar~core, drop=FALSE))
@@ -913,37 +941,49 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
     
     if (fixed==TRUE){
       fix.ylim <- expression(ylim(0,100))
-    } else {
+    } 
+    if (fixed==FALSE){
       fix.ylim <- expression(ylim(0, NA))
     }
+    if (fixed=="free"){
+      fix.ylim <- expression(facet_wrap(vars(core), dir="v", scales="free_y", strip.position = "right", drop=T))
+    }
     
-    fs <- w/gcd(h, w)
-    fs <- round(c(fs+(fs/2), fs+(fs/3.2), fs+(fs/4), fs+(fs/8), fs+(fs/16), fs*2))
+   
     
     group.core$rel.abund <- group.core$rel.abund*100
     
-    lev <- match(levels(with(meta, eval(parse(text=subgroup)))),
-                 unique(with(group.core, eval(parse(text=subgroup)))))
+    #lev <- match(levels(with(meta, eval(parse(text=subgroup)))),
+    #             unique(with(group.core, eval(parse(text=subgroup)))))
+    #lev <- lev[which(!is.na(lev))]
     
-    group.core[,which(names(group.core)==subgroup)] <-
-      factor(group.core[,which(names(group.core)==subgroup)],
-             levels=levels(with(group.core, eval(parse(text=subgroup))))[
-               lev[which(is.na(lev)==FALSE)]])
+    #group.core[,which(names(group.core)==subgroup)] <-
+    #  factor(group.core[,which(names(group.core)==subgroup)],
+    #         levels=levels(with(group.core, eval(parse(text=subgroup))))[
+    #           lev[which(is.na(lev)==FALSE)]])
+    
+    w <- 500*length(unique(group.core[,1]))+1000
+    r <- expression(300)
+    fs <- w/300
+    fs <- round(c(fs+(fs/2), fs+(fs/3.2), fs+(fs/4), fs+(fs/8), fs+(fs/16), fs*2))
     
     if (view.all==T){
       fexp <- expression(facet_grid(groupvar~., drop=TRUE))
       fexp2 <- expression(facet_grid(groupvar~., drop=TRUE))
       h <- 2000
-      w <- 1000*(ceiling(length(levels(group.core[,1]))/2))+800
+    } else {
+      h <- 800*length(unique(group.core$core))+1200
     }
+    
+    group.core$otu <- factor(group.core$otu, levels=unique(group.core$otu)) #makes sure the otus are in the right order
+    
     
     f <- ggplot(group.core, aes(eval(parse(text=subgroup)), rel.abund, fill=otu)) +
       eval(expr=fexp) +
       geom_bar(stat="identity") +
       eval(expr=fix.ylim) +
       theme_minimal() +
-      scale_fill_manual(values=
-                          colorRampPalette(colors)(length(unique(as.factor(group.core$otu))))) +
+      scale_fill_manual(values=colors) +
       theme(panel.border=element_rect(linetype="solid", fill=NA),
             legend.position=leg[[1]],
             legend.justification=leg[[2]],
@@ -961,73 +1001,76 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
             plot.caption = element_text(size=fs[5]),
             legend.background=element_rect(fill="white", colour="black"))
     
-    jpeg(file=paste("./coreplots/profiles/", names(list[i]), date, "_", threshold, "_", as.character(margin), ".jpeg", sep=""),
-         width=w, height=h, res=eval(expr=r), units="px")
-    print(f + labs(title=paste("Progression of Core Microbiome Composition in", names(list)[i])) + 
+    jpeg(file=paste("./coreplots/profiles/", i, date, "_", threshold, "_", as.character(margin), ".jpeg", sep=""),
+         width=w, height=h, units="px", res=eval(expr=r) )
+    print(f + labs(title=paste("Progression of Core Microbiome Composition in", i)) + 
             xlab(subgroup) + ylab("Relative Abundance (%)") +
             guides(fill=guide_legend(keywidth = fs[2]/10, keyheight=fs[2]/(10*kh), ncol=cols)) +
             labs(caption=paste("Occurence margin: ", as.character(margin*100), "%", "\n",
                                "Abundance threshold: ", as.character(threshold*100), "%")))
     dev.off()
   }
-  write.csv(df, paste("./coreplots/profiles/facet", date, "_",
+  write.csv(df, paste("./coreplots/profiles/", date, "_",
                       threshold, "_", as.character(margin), ".csv", sep=""))
-  if ("BG" %in% unique(df$groupvar)){
-    df <- subset(df, subset=groupvar!="BG")
-    df$core <- factor(df$core)
+  
+  if (facet==TRUE){
+    if ("BG" %in% unique(df$groupvar)){
+      df <- subset(df, subset=groupvar!="BG")
+      df$core <- factor(df$core)
+    }
+    
+    sg <- which(names(df)==subgroup)
+    pull <- unique(data.frame(df$groupvar, df[,sg]))
+    pull <- names(which(summary(pull[,1])==length(unique(df[,sg]))))
+    df <- df[which(df$groupvar%in%pull),]
+    df$groupvar <- factor(df$groupvar)
+    df$rel.abund <- df$rel.abund*100
+    if (landscape==FALSE){
+      w <- 4000
+      h <- 8000
+      legs <- expression(theme(legend.position="right",
+                               legend.justification="right"))
+      gui <- expression(guides(fill=guide_legend(keywidth = 1, keyheight=0.75, ncol=1)))
+      
+      
+    } else {
+      w <- 8000
+      h <- 4000
+      legs <- expression(theme(legend.position="bottom",
+                               legend.justification="center"))
+      gui <- expression(guides(fill=guide_legend(keywidth = 1, keyheight=0.75, ncol=7)))
+      
+    }
+    
+    df[,which(names(df)==subgroup)] <-
+      factor(df[,which(names(df)==subgroup)],
+             levels=levels(with(df, eval(parse(text=subgroup))))[
+               lev[which(is.na(lev)==FALSE)]])
+    
+    bff <- ggplot(df, aes(eval(parse(text=subgroup)), rel.abund, fill=otu)) +
+      geom_bar(stat="identity") +
+      eval(expr=fix.ylim) +
+      eval(expr=fexp2) +
+      theme_minimal() +
+      scale_fill_manual(values=
+                          colorRampPalette(colors)(length(unique(as.factor(df$otu))))) +
+      theme(panel.border=element_rect(linetype="solid", fill=NA),
+            panel.grid.major.x = element_line(color="grey50", linetype="dotted"),
+            panel.grid.minor.x = element_blank(),
+            panel.grid.major.y = element_line(colour="grey90", linetype="36"),
+            panel.grid.minor.y = element_blank(),
+            axis.text.x=element_text(angle=330),
+            legend.background=element_rect(fill="white", colour="black")) +
+      eval(expr=legs)
+    jpeg(file=paste("./coreplots/profiles/facet", date, "_", threshold, "_", as.character(margin), ".jpeg", sep=""),
+         width=w, res=600, units="px", height=h) #height=h*length(list))
+    print(bff + labs(title=paste("Progression of Core Microbiome Composition")) + 
+            xlab(subgroup) + ylab("Relative Abundance (%)") +
+            eval(expr=gui) +
+            labs(caption=paste("Occurence margin: ", as.character(margin*100), "%", "\n",
+                               "Abundance threshold: ", as.character(threshold*100), "%")))
+    dev.off()
   }
-  
-  sg <- which(names(df)==subgroup)
-  pull <- unique(data.frame(df$groupvar, df[,sg]))
-  pull <- names(which(summary(pull[,1])==length(unique(df[,sg]))))
-  df <- df[which(df$groupvar%in%pull),]
-  df$groupvar <- factor(df$groupvar)
-  df$rel.abund <- df$rel.abund*100
-  if (landscape==FALSE){
-    w <- 4000
-    h <- 8000
-    legs <- expression(theme(legend.position="right",
-                             legend.justification="right"))
-    gui <- expression(guides(fill=guide_legend(keywidth = 1, keyheight=0.75, ncol=1)))
-    
-    
-  } else {
-    w <- 8000
-    h <- 4000
-    legs <- expression(theme(legend.position="bottom",
-                             legend.justification="center"))
-    gui <- expression(guides(fill=guide_legend(keywidth = 1, keyheight=0.75, ncol=7)))
-    
-  }
-  
-  df[,which(names(df)==subgroup)] <-
-    factor(df[,which(names(df)==subgroup)],
-           levels=levels(with(df, eval(parse(text=subgroup))))[
-             lev[which(is.na(lev)==FALSE)]])
-  
-  bff <- ggplot(df, aes(eval(parse(text=subgroup)), rel.abund, fill=otu)) +
-    geom_bar(stat="identity") +
-    eval(expr=fix.ylim) +
-    eval(expr=fexp2) +
-    theme_minimal() +
-    scale_fill_manual(values=
-                        colorRampPalette(colors)(length(unique(as.factor(df$otu))))) +
-    theme(panel.border=element_rect(linetype="solid", fill=NA),
-          panel.grid.major.x = element_line(color="grey50", linetype="dotted"),
-          panel.grid.minor.x = element_blank(),
-          panel.grid.major.y = element_line(colour="grey90", linetype="36"),
-          panel.grid.minor.y = element_blank(),
-          axis.text.x=element_text(angle=330),
-          legend.background=element_rect(fill="white", colour="black")) +
-    eval(expr=legs)
-  jpeg(file=paste("./coreplots/profiles/facet", date, "_", threshold, "_", as.character(margin), ".jpeg", sep=""),
-       width=w, res=600, units="px", height=h) #height=h*length(list))
-  print(bff + labs(title=paste("Progression of Core Microbiome Composition")) + 
-          xlab(subgroup) + ylab("Relative Abundance (%)") +
-          eval(expr=gui) +
-          labs(caption=paste("Occurence margin: ", as.character(margin*100), "%", "\n",
-                             "Abundance threshold: ", as.character(threshold*100), "%")))
-  dev.off()
   return(df)
 }
 
@@ -1046,6 +1089,7 @@ dendro.heatmap <- function(comm, tax, meta, path="", group, subgroup, core.list=
   } else {
     warning(paste0("Sample ID not found. Using factor column 1 (", names(meta)[1], ") as sample ID. "))
     names(meta)[1] <- "sample"
+    id <- 1
   }
   
   if (any(!row.names(comm)%in%meta[,which(names(meta)=="sample")])){
@@ -1194,7 +1238,7 @@ dendro.heatmap <- function(comm, tax, meta, path="", group, subgroup, core.list=
     
     new <- data.frame(ID=row.names(data), data)
     
-    data <- left_join(new, meta[,c(1, g, sg)], by=c("ID"="sample"))
+    data <- left_join(new, meta[,c(id, g, sg)], by=c("ID"="sample"))
     row.names(data) <- row.names(new)
     data <- data[,-1]
     rm(new)
@@ -1413,22 +1457,25 @@ dendro.heatmap <- function(comm, tax, meta, path="", group, subgroup, core.list=
           plot.margin = margin(0,0,0,0, "pt"))
   
   n <- length(phy$new.labels)
+  n2 <- length(den$tip.labels)
   
   if (n>=50){
     ht <- 56*n
   } 
   if (n<50 & n>=25){
-    ht <- 3000
+    ht <- 800+65*n
   }
   if (n<25){
     ht <- 2000
   }
   
-  hts <- c(0.3-0.00075*n, 3)
-  wds <- c(0.5+0.003*n, 3)
+  wd <- 1000+65*n2
   
-  tiff(paste0("./coreplots/profiles/phyloheatmap_", file, ".tiff"), width=3600, height=ht)
-  ggarrange(e, den, phy, heat, heights=hts, widths=c(.5,3))
+  hts <- c(0.4-0.003*n, 3)
+  wds <- c(0.5-0.003*n2, 3)
+  
+  tiff(paste0("./coreplots/profiles/phyloheatmap_", file, ".tiff"), width=wd, height=ht)
+  ggarrange(e, den, phy, heat, heights=hts, widths=wds)
   dev.off()
   
 }
@@ -1455,6 +1502,7 @@ mbiom.venn <- function(mat, meta, group, tax=NULL, file="./", tax.grp="tag") {
   } else {
     warning(paste0("Sample ID not found. Using factor column 1 (", names(meta)[1], ") as sample ID. "))
     names(meta)[1] <- "sample"
+    id <- 1
   }
   
   if (any(!row.names(mat)%in%meta[,which(names(meta)=="sample")])){
@@ -1473,7 +1521,7 @@ mbiom.venn <- function(mat, meta, group, tax=NULL, file="./", tax.grp="tag") {
   g <- which(names(meta)==group)
   
   mat2 <- data.frame(sample=row.names(mat), mat)
-  mat <- right_join(meta[,c(1,g)], mat2)
+  mat <- right_join(meta[,c(id,g)], mat2)
   
   
   iff <- function(x){ 
@@ -1520,12 +1568,14 @@ mbiom.venn <- function(mat, meta, group, tax=NULL, file="./", tax.grp="tag") {
   for (f in 1:dim(test)[2]){
     test[which(test[,f]!=0),f] <- renamex[which(test[,f]!=0)]
   }
-  
+  #return(test)
   sorted <- sort(apply(df[,-1], MARGIN=2, FUN=top), decreasing=T)
-  
+  #return(sorted)
   matched <- match(names(sorted), names(df[,-1]))
+  #return(matched)
+  #return(as.list(test[matched,]))
   test <- sapply(as.list(test[matched,]), FUN=rem0)
-  
+  #return(test)
   if (!is.null(tax)){
     if (tax.grp %in% names(tax)){
       names(tax)[which(names(tax)==tax.grp)] <- "taxgrp"
@@ -1538,7 +1588,7 @@ mbiom.venn <- function(mat, meta, group, tax=NULL, file="./", tax.grp="tag") {
       print(test3)
       sink()
     }
-    
+    #return(test3)
     if (length(test3)<=4){
       venn.diagram(test3, paste("./coreplots/venn/",file, "euler_group_tax.tiff", sep=""),
                    category.names = names(test3), margin=0.12,
@@ -1594,7 +1644,7 @@ mbiom.venn <- function(mat, meta, group, tax=NULL, file="./", tax.grp="tag") {
 
 
 
-shared.taxa <- function(mbiom, file){
+shared.taxa <- function(mbiom, file, excel=T){
   
   if(dir.exists("./coreplots/")==FALSE){
     dir.create("./coreplots/")
@@ -1622,13 +1672,19 @@ shared.taxa <- function(mbiom, file){
     x <- mbiom[[i]][which(!mbiom[[i]]%in%unlist(mbiom[-i], use.names=F))]
     
     out[[names(mbiom)[i]]] <- x
+    
+    if (length(mbiom)==2){
+      all <- mbiom[[1]][which(mbiom[[1]]%in%mbiom[[2]])]
+    }
   }
   
   for (i in 1:dim(a)[2]){
-    x <- mbiom[[a[1,i]]][which(mbiom[[a[1,i]]]%in%mbiom[[a[2,i]]] & 
-                                 !mbiom[[a[1,i]]]%in%unlist(mbiom[which(!names(mbiom)%in%a[,i])]))]
-    
-    out[[paste(a[1,i],a[2,i], sep="-")]] <- x
+    if (length(mbiom)!=2){
+      x <- mbiom[[a[1,i]]][which(mbiom[[a[1,i]]]%in%mbiom[[a[2,i]]] & 
+                                   !mbiom[[a[1,i]]]%in%unlist(mbiom[which(!names(mbiom)%in%a[,i])]))]
+      
+      out[[paste(a[1,i],a[2,i], sep="-")]] <- x
+    }
   }
   
   if (length(mbiom)==3){
@@ -1670,13 +1726,16 @@ shared.taxa <- function(mbiom, file){
   
   out[["all"]] <- all
   
-  if (file.exists(paste0("./coreplots/venn/",file, ".xlsx"))){
-    file.remove(paste0("./coreplots/venn/",file, ".xlsx"))
+  if (excel==T){
+    if (file.exists(paste0("./coreplots/venn/",file, ".xlsx"))){
+      file.remove(paste0("./coreplots/venn/",file, ".xlsx"))
+    }
+    for (i in 1:length(out)){
+      if (length(out[[i]])>0){
+        write.xlsx(out[i], file=paste0("./coreplots/venn/",file, ".xlsx"), sheetName = names(out)[i], append=T)
+      }
+    }
   }
-  for (i in 1:length(out)){
-    write.xlsx(out[i], file=paste0("./coreplots/venn/",file, ".xlsx"), sheetName = names(out)[i], append=T)
-  }
-  
   return(out)
 }
 
@@ -1687,15 +1746,13 @@ shared.taxa <- function(mbiom, file){
 
 mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgroup, file="mbiom_bar", legend=F){
   
-  cran <- c("dplyr", "ggplot2")
+  cran <- c("dplyr", "ggplot2", "ggpubr")
   if (any(!cran%in%row.names(installed.packages()))) {
     install.packages(cran[!cran%in%row.names(installed.packages())])
   }
   require(dplyr)
   require(ggplot2)
-  
-  colors <- c("#330033", "#F0E442", "#0072B2", "#FF0033", "#FF9933", "#999999", "#56B4E9", "#FFCC00", "#00FF00", "#FF66FF", "#666666")
-  
+  require(ggpubr)
   
   id <- grep("sample", names(meta), ignore.case = T)
   if (length(id)==1){
@@ -1703,6 +1760,7 @@ mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgr
   } else {
     warning(paste0("Sample ID not found. Using factor column 1 (", names(meta)[1], ") as sample ID. "))
     names(meta)[1] <- "sample"
+    id <- 1
   }
   
   if (any(!row.names(comm)%in%meta[,which(names(meta)=="sample")])){
@@ -1734,7 +1792,10 @@ mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgr
   }
   
   sel.list <- as.list(names(shared))
-  sel.list <- lapply(sel.list, FUN=splt)
+  
+  if (length(sel.list)>3){
+    sel.list <- lapply(sel.list, FUN=splt)
+  }
   
   if (is.null(select)){select <- names(comm)} 
   
@@ -1753,11 +1814,15 @@ mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgr
     if (t==TRUE){break}
   }
   
+  df <- data.frame()
   for (i in 1:length(sel.list)){
     
     selection <- sel.list[[i]]
     
-    if (selection=="all"){selection <- unique(unlist(sel.list))}
+    if ("all"%in%selection){
+      selection <- unique(unlist(sel.list))
+      selection <- selection[-length(selection)]
+    }
     
     otus <- tax$tag[match(shared[[i]], tax[,j])]
     otus <- select[select%in%otus]
@@ -1766,7 +1831,7 @@ mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgr
     
     
     data <- data.frame(sample=row.names(comm), comm)
-    data <- right_join(meta[,c(1,g.sg)], data)
+    data <- right_join(meta[,c(id,g.sg)], data)
     
     data2 <- data[,-1] %>%
       group_by(group.subgroup) %>%
@@ -1791,20 +1856,30 @@ mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgr
     names(ce.il)[which(names(ce.il)==group)] <- "Group"
     names(ce.il)[which(names(ce.il)==subgroup)] <- "Subgroup"
     
-    colors <- c("#330033", "#F0E442", "#0072B2", "#FF0033", "#FF9933", "#999999", "#56B4E9", "#FFCC00", "#00FF00", "#FF66FF", "#666666")
+    ce.il <- data.frame(ce.il, sec.list=paste(selection, collapse="-"))
     
-    if (legend==T){
-      leg <- expression(guides(fill=guide_legend(title="", ncol=1)))
-    } else {leg <- expression(guides(fill=F))}
+    df <- rbind(df, ce.il)
     
-    f <- ggplot(ce.il, aes(Subgroup, value, fill=Taxonomy)) +
+  }
+  
+  #return(ce.il)
+  colors <- c("#330033", "#F0E442", "#0072B2", "#FF0033", "#FF9933", "#999999", "#56B4E9", "#FFCC00", "#00FF00", "#FF66FF", "#666666")
+  colors <- colorRampPalette(colors)(length(unique(as.factor(df$Taxonomy))))
+  names(colors) <- as.character(unique(df$Taxonomy))
+  
+  for (i in unique(df$sec.list)){
+    
+    sub.sel <- subset(df, subset=sec.list==i)
+
+    
+    f <- ggplot(sub.sel, aes(Subgroup, value, fill=Taxonomy)) +
       facet_wrap(vars(Group), dir="v", scales="free_y", strip.position = "right") +
       geom_bar(stat="identity", width=.96) +
       theme_minimal() +
-      scale_fill_manual(values=colorRampPalette(colors)(length(unique(as.factor(ce.il$Taxonomy))))) +
+      scale_fill_manual(values=colors) +
       theme(panel.border=element_rect(linetype="solid", fill=NA, color="black"),
             legend.position="right",
-            legend.justification="right",
+            legend.justification="center",
             panel.grid.major.x = element_line(color="grey50", linetype="dotted"),
             panel.grid.minor.x = element_blank(),
             panel.grid.major.y = element_line(colour="grey90", linetype="36"),
@@ -1818,31 +1893,59 @@ mbiom.bar <- function(shared, comm, select=NULL, tax, hi.tax, meta, group, subgr
             panel.spacing.y = unit(2, "lines"),
             plot.margin = margin(3, 3, 3, 3, "lines")) +
       ylab(NULL)+
-      xlab(NULL)+
-      eval(expr=leg)
+      xlab(NULL)
+      #eval(expr=leg)
     
-    w <- 
+    if (legend==T){
+      #leg <- expression(guides(fill=guide_legend(title="", ncol=1)))
+      pleg <- as_ggplot(get_legend(f))
+      if (length(unique(as.factor(sub.sel$Taxonomy))) > 13){
+        wid <- length(unique(as.factor(sub.sel$Taxonomy)))/14*900
+      } else {wid <- 900}
+    } #else {leg <- expression(guides(fill=F))}
       
-      if (length(selection)==4){
-        jpeg(paste0("./coreplots/venn/", file, "/", selection[1],"-", selection[2], 
-                    "-", selection[3],"-", selection[4],"_sharedOTUs.jpg"),
+    count <- unlist(strsplit(i, split="-"))
+    
+      if (length(count)==4){
+        jpeg(paste0("./coreplots/venn/", file, "/", i,"_legend.jpg"),
+             width=wid, height=1150)
+        print(pleg)
+        dev.off()
+        
+        jpeg(paste0("./coreplots/venn/", file, "/", i,"_sharedOTUs.jpg"),
              width=2300, height=1250)
       }
-    if (length(selection)==3){
-      jpeg(paste0("./coreplots/venn/", file, "/",selection[1],"-", selection[2], 
-                  "-", selection[3],"_sharedOTUs.jpg"),
+    if (length(count)==3){
+      jpeg(paste0("./coreplots/venn/", file, "/", i,"_legend.jpg"),
+           width=wid, height=1150)
+      print(pleg)
+      dev.off()
+      
+      jpeg(paste0("./coreplots/venn/", file, "/", i,"_sharedOTUs.jpg"),
            width=1300, height=1650)
     }
-    if (length(selection)==2){
-      jpeg(paste0("./coreplots/venn/", file, "/", selection[1],"-", selection[2], "_sharedOTUs.jpg"),
+    if (length(count)==2){
+      jpeg(paste0("./coreplots/venn/", file, "/", i, "_legend.jpg"),
+           width=wid, height=1150)
+      print(pleg)
+      dev.off()
+      
+      jpeg(paste0("./coreplots/venn/", file, "/", i, "_sharedOTUs.jpg"),
            width=1300, height=1150)
     }
-    if (length(selection)==1){
-      jpeg(paste0("./coreplots/venn/", file, "/", selection[1],"_sharedOTUs.jpg"),
+    if (length(count)==1){
+      jpeg(paste0("./coreplots/venn/", file, "/", i,"_legend.jpg"),
+           width=wid, height=1150)
+      print(pleg)
+      dev.off()
+      
+      jpeg(paste0("./coreplots/venn/", file, "/", i,"_sharedOTUs.jpg"),
            width=1300, height=700)
     }
-    print(f)
+    print(f+guides(fill=F))
     dev.off()
+    
+
   }
-  
+  graphics.off()
 }
