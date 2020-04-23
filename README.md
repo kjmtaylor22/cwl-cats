@@ -1,9 +1,16 @@
 # cwl-cats
 Work for CWL lab
-CWL85_pipeline.R is a sample pipeline script instructing the user on the order of operations for exploratory analysis with this data. 
+
+Each branch from 'master' is an individual project, associated with a particular publication. 
+The raw sequence data for these projects is save to the Sequence Read Archive (https://www.ncbi.nlm.nih.gov/sra).
+
+The functions used for each project are saved with the project files (so you don't need to find and download them individually). 
+
+
 The functions named in the script are stored in separate files and must be loaded from wherever they are saved prior to use.
 Your working directory need only contain:
-	1.	a *.biom table with taxonomy included (as output by Qiime)
+	1.	a *.biom feature table (as output by QIIME2)
+	2. 	taxonomy.tsv (as output by QIIME2)
 	2.	a *.csv containing metadata
 	3.	a phylogenetic tree (*.tre) of the representative sequences (as output by Qiime)
 	4. 	the *.R file "CWL85_functions.R" in this directory, or each of the following functions individually
