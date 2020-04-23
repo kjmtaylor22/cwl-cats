@@ -1,0 +1,35 @@
+Age,Wt,Flock,Sex,Vac,Vac_age,Vac_grp,y
+1,142.8,F1,,Megan-Egg,3.571428571,F1,1250
+1,140.25,F2,,HE Vac,4,F1,1250
+3,695.67,F1,,Megan-Egg,3.571428571,F2,0
+3,663.44,F2,,HE Vac,4,F2,0
+5,1567.73,F1,,Albendazole,10,F1,1250
+5,1380.57,F2,,Di-Methox,7.914285714,F1,1250
+8,3610,F1,,Megan-Egg,9,F1,1250
+8,3270,F2,,M-Ninevax,10.21428571,F1,1250
+12,9312.5,F1,,M-Ninevax,13.94285714,F1,1250
+12,8250,F2,,CTC,7.371428571,F2,0
+16,16650,F1,,Megan-Egg,8.057142857,F2,0
+16,13700,F2,,Albendazole,9.642857143,F2,0
+1,170,Hybrid,M,CTC,14.35714286,F2,0
+2,380,Hybrid,M,Di-Methox,8.057142857,F2,0
+3,730,Hybrid,M,CTC,9.628571429,F2,0
+4,1340,Hybrid,M,,,,
+5,2060,Hybrid,M,,,,
+6,2940,Hybrid,M,,,,
+7,3990,Hybrid,M,,,,
+8,5100,Hybrid,M,,,,
+9,6270,Hybrid,M,,,,
+10,7590,Hybrid,M,,,,
+11,9010,Hybrid,M,,,,
+12,10420,Hybrid,M,,,,
+13,11900,Hybrid,M,,,,
+14,13440,Hybrid,M,,,,
+15,14940,Hybrid,M,,,,
+16,16470,Hybrid,M,,,,
+17,17920,Hybrid,M,,,,
+18,19260,Hybrid,M,,,,
+19,20510,Hybrid,M,,,,
+20,21700,Hybrid,M,,,,
+21,22850,Hybrid,M,,,,
+22,23940,Hybrid,M,,,,
