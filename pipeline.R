@@ -7,10 +7,9 @@ library(ggplot2)
 
 setwd(".")
 
-source("initialization_template.RD")
+source("initialize.R")
 
-write.bib(row.names(installed.packages()), file = "../../rpackages.bib")
-
+bibtex::write.bib(c("vegan","stats","pairwiseAdonis","GUniFrac","psych"), file = "rpackages.bib")
 
 ## load necessary data files and functions
 
@@ -150,7 +149,7 @@ dysb.14 <- facet.updown(comm14[,asvs], tax, meta, "BodySite", "Infection", "Mock
 
 ## visualize correlation of predominant genera to gene expression
 
-cyts <- c("UT_IFN.a", "UT_IFN.b","UT_IFN.g","UT_IFN.l","UT_IL.6","UT_OAS","UT_Mx","UT_LITAF") # names of metadata columns containing gene expression data
+cyts <- c("UT_IFN.a", "UT_IFN.b","UT_IFN.g","UT_IFN.l","UT_OAS","UT_Mx","UT_IL.6","UT_LITAF") # names of metadata columns containing gene expression data
 ct.cyts <- c("CT_IFN.g","CT_IFN.l", "CT_OAS", "CT_Mx","CT_IL4","CT_IL5","CT_IL6","CT_IL10","CT_IL12","CT_LITAF") # names of metadata columns containing gene expression data
 
 for (c in cyts){ # go through cyts iteratively; they will save to separate folders

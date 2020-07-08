@@ -55,6 +55,6 @@ save(tax, file="taxonomy.RD")
 
 meta <- read.csv("./metadata.csv") 
 meta$Infection <- factor(meta$Infection, levels=c("Mock","TKMN","CKPA","NEG"))
-meta$BodySite <- factor(meta$BodySite, levels=c("NAS", "TRA", "LRT", "CEC", "ILE"))
+meta$BodySite <- factor(meta$BodySite, levels=c("Nasal", "Trachea", "LRT", "Cecum", "Ileum"))
 meta$DPI <- factor(meta$DPI, levels=c("5DPC","14DPC","13DPC"))
 save(meta, file="./metadata.RD")
