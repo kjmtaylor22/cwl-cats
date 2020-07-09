@@ -174,6 +174,9 @@ regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite=="CEC" & meta
              tax, meta[meta$BodySite=="CEC" & meta$DPI=="5DPC",], as.character(unique(mb$otu[mb$groupvar=="CEC"])), 
              ct.cyts, "BodySite", 10, "CT_cytokines_CEConly", "cor", 1200, 1050, F, 1, NULL)
 
+write.csv(read.csv("coreplots/cytokines/heatmapdata_UT_cytokines_TRAonly.csv") %>% 
+            reshape2::dcast(genus ~ factor, value.var = "value"), "../TableS1.csv") # this produces a table reflecting the same information as in Figure 5
+
 ## visualize correlation of predominant genera to viral titer
 
 sites <- c("NAS", "TRA", "CEC", "ILE") # names of sites with viral titer data attached; LRT is exempt (see Materials & Methods)
@@ -185,11 +188,7 @@ for (s in sites){ # these plots will all go in the same folder
 
 regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite!="LRT"], asvs], tax[tax$tag%in%asvs,], meta[meta$BodySite!="LRT" & meta$DPI=="5DPC",], 
              gens, "EID50.mL", "BodySite", 10, "ALL_titers", "cor", 975, 1450, T, 1, NULL)  # this produces the correlation heatmap summarizing the regressions discussed above
-regr.heatmap(comm5[, asvs], tax[tax$tag%in%asvs,], meta[meta$DPI=="5DPC"&meta$Infection!="NEG",], 
-             gens, "BodyWt_g", "BodySite", NULL, "ALL_weights", "cor", 975, 1450, T, 1, NULL)  # this produces the correlation heatmap summarizing the regressions discussed above
 
-write.csv(read.csv("coreplots/cytokines/heatmapdata_ALL_weights.csv") %>% reshape2::dcast(genus ~ group, value.var = "value"),
-          "coreplots/correlation_weights.csv")
 ## produce NMDS of common predominant genera per body site and k-means clusters
 
 ls <- list() # initialize list to store NMDS and k-means output
@@ -244,37 +243,37 @@ dev.off() # close the device
 
 ## class plots (Bacilli and Gammaproteobacteria)
 
-rel.comm <- apply(comm, MARGIN=1, FUN=ra) %>% t() %>% as.data.frame()
+rel.comm <- apply(comm, MARGIN=1, FUN=ra) %>% t() %>% as.data.frame() # transform data frame from a table of counts to compositional matrix (relative abundance, sum to 1)
 save(rel.comm, file="relativeabundancecomm.RD")
 
-dpi5 <- rel.comm[row.names(rel.comm)%in%meta$SampleID[meta$DPI=="5DPC" & meta$Infection!="NEG"], match(asvs,names(rel.comm))] %>%
+dpi5 <- rel.comm[row.names(rel.comm)%in%meta$SampleID[meta$DPI=="5DPC" & meta$Infection!="NEG"], asvs] %>% # melt data frame to long form, summarizing ASV abundances by class
   data.frame(SampleID=row.names(.)) %>% reshape2::melt(id.vars="SampleID", variable.name="tag") %>% 
-  left_join(meta[,c("SampleID", "BodySite", "Infection")]) %>% left_join(tax[,c("tag", "genus", "class")]) %>%
+  left_join(meta[,c("SampleID", "BodySite", "Infection")]) %>% left_join(tax[,c("tag", "class")]) %>%
   group_by(SampleID, BodySite, Infection, class) %>% summarize_at(vars(value), funs(sum)) %>% as.data.frame() %>%
   .[which(.[,"class"]%in%c("Bacilli", "Gammaproteobacteria")),] %>%
   mutate(., groupnames=paste(BodySite, Infection, sep="_"))
-jpeg("./coreplots/class_plot_ALL_5dpi.jpeg", width=4500, height=2200, res=600)
-ggplot(dpi5) + geom_jitter(aes(Infection, value*100, color=Infection), width=0.2) + guides(color=F) +
+jpeg("./coreplots/class_plot_ALL_5dpi.jpeg", width=4500, height=2200, res=600) # open the graphics device
+ggplot(dpi5) + geom_jitter(aes(Infection, value*100, color=Infection), width=0.2) + guides(color=F) + # print graph to device
   facet_grid(class ~ BodySite) + ggthemes::theme_few() + ylab("Relative Abundance (%)") + xlab("") + ylim(0,100) +
   stat_summary(fun.y=mean, geom="errorbar", aes(Infection, value*100, ymax=..y.., ymin=..y..), width=.75, linetype="solid", size=.8)
-dev.off()
-sink("./coreplots/class_plot_ALL_5dpi.txt")
-pairwise.wilcox.test(dpi5$value[dpi5$class=="Bacilli"], dpi5$groupnames[dpi5$class=="Bacilli"], "holm")
-pairwise.wilcox.test(dpi5$value[dpi5$class=="Gammaproteobacteria"], dpi5$groupnames[dpi5$class=="Gammaproteobacteria"], "holm")
-sink()
+dev.off() # close the device
+sink("./coreplots/class_plot_ALL_5dpi.txt") # open text file for pasting results of pairwise Wilcoxon rank sum tests
+pairwise.wilcox.test(dpi5$value[dpi5$class=="Bacilli"], dpi5$groupnames[dpi5$class=="Bacilli"], "holm") # perform tests between groups for class Bacilli
+pairwise.wilcox.test(dpi5$value[dpi5$class=="Gammaproteobacteria"], dpi5$groupnames[dpi5$class=="Gammaproteobacteria"], "holm") # peform tests between groups for class Gammaproteobacteria
+sink() # close the file
 
-dpi14 <- rel.comm[row.names(rel.comm)%in%meta$SampleID[meta$DPI=="14DPC" & meta$Infection!="NEG"], match(asvs,names(rel.comm))] %>%
+dpi14 <- rel.comm[row.names(rel.comm)%in%meta$SampleID[meta$DPI=="14DPC" & meta$Infection!="NEG"], asvs] %>% # melt data frame to long form, summarizing ASV abundances by class
   data.frame(SampleID=row.names(.)) %>% reshape2::melt(id.vars="SampleID", variable.name="tag") %>% 
-  left_join(meta[,c("SampleID", "BodySite", "Infection")]) %>% left_join(tax[,c("tag", "genus", "class")]) %>%
+  left_join(meta[,c("SampleID", "BodySite", "Infection")]) %>% left_join(tax[,c("tag", "class")]) %>%
   group_by(SampleID, BodySite, Infection, class) %>% summarize_at(vars(value), funs(sum)) %>% as.data.frame() %>%
   .[which(.[,"class"]%in%c("Bacilli", "Gammaproteobacteria")),] %>%
   mutate(., groupnames=paste(BodySite, Infection, sep="_"))
-jpeg("./coreplots/class_plot_ALL_14dpi.jpeg", width=4500, height=2200, res=600)
-ggplot(dpi14) + geom_jitter(aes(Infection, value*100, color=Infection), width=0.2) + guides(color=F) +
+jpeg("./coreplots/class_plot_ALL_14dpi.jpeg", width=4500, height=2200, res=600)  # open the graphics device
+ggplot(dpi14) + geom_jitter(aes(Infection, value*100, color=Infection), width=0.2) + guides(color=F) + # print graph to device
   facet_grid(class ~ BodySite) + ggthemes::theme_few() + ylab("Relative Abundance (%)") + xlab("") + ylim(0,100) +
   stat_summary(fun=mean, geom="errorbar", aes(Infection, value*100, ymax=..y.., ymin=..y..), width=.75, linetype="solid", size=.8)
-dev.off()
-sink("./coreplots/class_plot_ALL_14dpi.txt")
-pairwise.wilcox.test(dpi14$value[dpi14$class=="Bacilli"], dpi14$groupnames[dpi14$class=="Bacilli"], "holm")
-pairwise.wilcox.test(dpi14$value[dpi14$class=="Gammaproteobacteria"], dpi14$groupnames[dpi14$class=="Gammaproteobacteria"], "holm")
-sink()
+dev.off() # close the device
+sink("./coreplots/class_plot_ALL_14dpi.txt") # open text file for pasting results of pairwise Wilcoxon rank sum tests
+pairwise.wilcox.test(dpi14$value[dpi14$class=="Bacilli"], dpi14$groupnames[dpi14$class=="Bacilli"], "holm") # perform tests between groups for class Bacilli
+pairwise.wilcox.test(dpi14$value[dpi14$class=="Gammaproteobacteria"], dpi14$groupnames[dpi14$class=="Gammaproteobacteria"], "holm") # peform tests between groups for class Gammaproteobacteria
+sink() # close the file
