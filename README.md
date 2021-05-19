@@ -1,7 +1,7 @@
 # cwl-cats
 Work for CWL lab
 
-Each branch from 'master' is an individual project, associated with a particular publication. 
+Each branch directory is an individual project, associated with a particular publication. 
 The raw sequence data for these projects is save to the Sequence Read Archive (https://www.ncbi.nlm.nih.gov/sra).
 
 The functions used for each project are saved with the project files (so you don't need to find and download them individually). 
