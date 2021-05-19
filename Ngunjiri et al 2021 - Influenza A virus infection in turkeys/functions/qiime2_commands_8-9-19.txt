@@ -1,0 +1,300 @@
+------------------------
+1. Fastq file name formatting
+## sample file names must be in correct format for Qiime2 later: sample_barcode_lane_R_001.fastq.gz (sample_S01_L001_R1_001.fastq.gz)
+## if for some reason the files aren't in that format, here's how you can adjust it:
+
+#(1) if there are too many tags and some don't match the above format, remove them with this
+for i in *.fastq.gz;do echo ${i//.*} | cut -d"_" -f 1,4,5,6 | xargs  -I file mv  $i file.fastq.gz;done 
+
+#(2) if the lane number is missing but all other tags are in place, use this:
+for i in *.fastq.gz;do echo ${i//.*} | sed 's/^/L001_/' | awk -F"_" '{print $2 "_" $3 "_" $1 "_" $4 "_" $5}' | xargs  -I file mv  $i file.fastq.gz;done
+
+#(3) if you need to add some differentiating character to the sample tag (behind the TOS), use this:
+for i in *.fastq.gz;do echo ${i//.*} | sed s'/TOS//' | sed 's/^/a/' | sed 's/^/TOS/' | xargs  -I file mv  $i file.fastq.gz;done
+for i in *.fastq.gz;do echo ${i//.*} | sed s'/TOS//' | sed 's/^/b/' | sed 's/^/TOS/' | xargs  -I file mv  $i file.fastq.gz;done
+for i in *.fastq.gz;do echo ${i//.*} | sed s'/TOS//' | sed 's/^/c/' | sed 's/^/TOS/' | xargs  -I file mv  $i file.fastq.gz;done
+
+#(4) if you need to just add something to the front:
+rename 's/^/TOS/' *
+------------------------
+2. Adapter trimming
+a. in the directory in the directory with fastq.gz files,
+	mkdir Adapter_Trimmed
+b. module load BBTools/v35
+c. run script:
+
+files_1=(*_R1_001.fastq.gz);files_2=(*_R2_001.fastq.gz);sorted_files_1=($(printf "%s\n" "${files_1[@]}" | sort -u));sorted_files_2=($(printf "%s\n" "${files_2[@]}" | sort -u));for ((i=0; i<${#sorted_files_1[@]}; i+=1)); do bbduk.sh -Xmx20g in1=${sorted_files_1[i]} in2=${sorted_files_2[i]} out1=Adapter_Trimmed/${sorted_files_1[i]%%.*}.fastq out2=Adapter_Trimmed/${sorted_files_2[i]%%.*}.fastq ref=$ADAPTSEQ/nextera.fa.gz ktrim=r k=23 mink=11 hdist=1 tpe tbo &>Adapter_Trimmed/${sorted_files_2[i]%%.*}.log;done
+
+d. consolidate log files
+	cd Adapter_Trimmed
+	mkdir logs
+	mv *.log logs
+
+------------------------	
+3. 16S primer removal
+While in the 'commands' directory,
+
+source activate qiime2-2019.1
+
+command: bash 4-primer-rm-cutadapt-1.sh [NOTES: must be in qiime2, must run from the directory where the scripts are stored (commands directory)]
+
+## you should consider using tar and gzip on the Adapter_Trimmed folder to save some space
+## if this takes too long, maybe wait until you've filtered_by_length, and then just delete Adapter_Trimmed
+
+
+tar -zcvf Adapter_Trimmed.tar.gz Adapter_Trimmed/
+rmdir Adapter_Trimmed
+------------------------
+4.  Merge paired reads with BBMerge
+
+cd ../sequences/Primer-Filtered
+mkdir Merged
+mkdir UnMerged
+mkdir Logs_Merged
+cd fastq
+files_1=(*_R1_001.fastq.gz);files_2=(*_R2_001.fastq.gz);sorted_files_1=($(printf "%s\n" "${files_1[@]}" | sort -u));sorted_files_2=($(printf "%s\n" "${files_2[@]}" | sort -u));for ((i=0; i<${#sorted_files_1[@]}; i+=1)); do bbmerge-auto.sh in1=${sorted_files_1[i]} in2=${sorted_files_2[i]} out=../Merged/${sorted_files_1[i]%%.*}.fastq  outu1=../UnMerged/UnMerged_${sorted_files_1[i]%%.*}.fastq outu2=../UnMerged/UnMerged_${sorted_files_2[i]%%.*}.fastq ihist=../Logs_Merged/${sorted_files_2[i]%%.*}.hist ecct extend2=20 iterations=5 &>../Logs_Merged/${sorted_files_2[i]%%.*}.log;done
+
+
+4a. Make a histogram to determine cut-off length
+
+cd ../Merged
+mkdir Histo
+cd Histo
+
+
+cat ../*.fastq > cat.fastq 
+
+reformat.sh in=cat.fastq out=cat.fasta 
+
+pyfasta info -n -1 cat.fasta >  Length_Distro.txt
+
+cat Length_Distro.txt | cut -d" " -f3 | cut -d":" -f2| sort -n| uniq -c  > Length_Distro_Histo_Merged.txt
+
+cd ../
+--------------------------
+
+#5. Filtering/removing reads minlength=245 maxlength=260
+
+mkdir filtered_by_length
+mkdir filtered_by_length_logs
+ 
+for f in *.fastq; do  reformat.sh in=$f out=filtered_by_length/$f  minlength=245 maxlength=260 overwrite=true 2>> filtered_by_length_logs/filtered_by_length_logs.log;done 
+
+
+cd filtered_by_length
+mkdir cat_files
+cd cat_files
+cat ../*.fastq > cat.fastq 
+reformat.sh in=cat.fastq out=cat.fasta 
+pyfasta info -n -1 cat.fasta >  Length_Distro_Merged.txt
+cat Length_Distro_Merged.txt | cut -d" " -f3 | cut -d":" -f2| sort -n| uniq -c  > Length_Distro_Histo_Merged.txt
+cd ../
+mv cat_files ../filtered_by_length_logs
+
+
+-------------------------
+7 Importation to QIIME2
+
+
+b.Single end 
+# file input needs to be in .gz format so you need to add gzip * on the import bash command 
+# or do it outside the script, depending on how much space you have to work with...
+
+gzip *
+
+
+command: bash 5-import_to_qiime2_SE.sh [NOTES: must be in qiime2, must run from the directory where the scripts are stored (commands directory)]
+
+
+## you should now consider using tar and gzip on the Primer-Filtered folder to save some space
+## I suggest keeping the filtered_by_length folder at least, in case you want to combine them with others
+## you can move it (mv) or roll it into a tarball (tar)
+## since the files are already compressed, it doesn't really matter
+
+mv ../Primer-Filtered/Merged/filtered_by_length ../
+tar -zcvf --remove-files ../Primer-Filtered.tar.gz ../Primer-Filtered/
+tar -cvf --remove-files ../filtered_by_length.tar ../Primer-Filtered/Merged/filtered_by_length/
+rmdir Primer-Filtered
+
+------------------------
+
+5*. Sequence quality control and feature table construction
+
+a. Denoise single-end sequences, dereplicate them, and filter chimeras.
+
+qiime dada2 denoise-single \
+  --i-demultiplexed-seqs merged-sequences98.qza \
+  --p-trunc-len 0 \
+  --p-chimera-method pooled \
+  --o-representative-sequences rep-seqs-dada2.qza \
+  --o-table table-dada2.qza \
+  --output-dir table \
+  --p-n-threads 0 
+  
+
+--------------------------------------------------
+## getting a Silva classifier into Qiime2
+
+qiime tools import \
+  --input-path silva_132_99_16S.fna \
+  --output-path silva_rep_set_99.qza \
+  --type 'FeatureData[Sequence]'
+  
+qiime feature-table tabulate-seqs \
+  --i-data silva_rep_set_99.qza \
+  --o-visualization silva_rep_set_99.qzv
+  
+qiime tools import \
+  --input-path majority_99_taxonomy_7_levels_parsed.tsv \
+  --output-path majority_99_taxonomy_7_levels.qza \
+  --type 'FeatureData[Taxonomy]'
+  --source-format HeaderlessTSVTaxonomyFormat
+   
+qiime feature-classifier extract-reads \
+  --i-sequences silva_rep_set_99.qza \
+  --p-f-primer GAGTGCCAGCMGCCGCGGTAA \
+  --p-r-primer ACGGACTACHVGGGTWTCTAAT \
+  --p-trunc-len 260 \
+  --p-min-length 100 \
+  --p-max-length 400 \
+  --o-reads silva-99-ref-seqs.qza
+  
+qiime feature-classifier fit-classifier-naive-bayes \
+  --i-reference-reads silva-99-ref-seqs.qza \
+  --i-reference-taxonomy majority_99_taxonomy_7_levels.qza \
+  --o-classifier silva-maj-qiime2_classifier.qza
+  
+----------------------
+  
+## open reference clustering 
+  
+qiime vsearch cluster-features-open-reference \
+  --i-table table-dada2.qza \
+  --i-sequences rep-seqs-dada2.qza \
+  --i-reference-sequences silva-99-ref-seqs.qza \
+  --p-perc-identity 1 \
+  --o-clustered-table table-or-100.qza \
+  --o-clustered-sequences rep-seqs-or-100.qza \
+  --o-new-reference-sequences new-ref-seqs-or-100.qza
+  
+## I think you can also re-train (naive-bayes) the classifier using the new-ref-seqs reads; not necessary though  
+---------------------
+
+6. Sequence filtering 
+
+A. Excluding sequences by alignment
+The exclude-seqs method aligns a set of query sequences contained in a FeatureData[Sequence] file against a set of reference sequences. This method employs a number of different alignment criteria (BLAST evalue, percent identity to top reference sequence, and percent of query that aligns to top reference sequence) to decide whether that sequence “hits” the reference sequences, and outputs separate files of sequences that hit/do not hit the reference sequences. This method can be used for a variety of applications, including removing known contaminant sequences, excluding host sequences (e.g., human DNA), or removing non-target sequences (e.g., non-bacterial) from your data.
+First, we will separate a small set of query sequences into those that hit/do not hit a set of reference sequences.
+ 
+qiime quality-control exclude-seqs \
+  --i-query-sequences rep-seqs-or-100.qza \
+  --i-reference-sequences reference-seqs.qza \
+  --p-method vsearch \
+  --p-perc-identity 0.5\
+  --p-perc-query-aligned 0.5 \
+  --output-dir ref100 
+  
+B. Remove hits or misses from feature table
+-----
+Now that you have split your sequences into groups of sequences that hit/miss the reference sequences, you will most likely want to filter your feature table to remove hits or misses prior to further analysis. See filtering tutorial, In some cases, you may want to remove the misses from your feature table, e.g., if you are trying to select sequences that align to bacterial sequences (or a more specific clade). In other cases, you may want to remove the hits from your feature table, e.g., if you are trying to filter out contaminants or sequences that align to host DNA. Here we will filter out misses
+-----
+
+cd ref100
+
+qiime feature-classifier classify-sklearn \
+  --i-classifier ../silva-maj-qiime2_classifier.qza \
+  --i-reads sequence_hits.qza \
+  --o-classification taxonomy.qza
+ 
+## The taxonomy takes a while, but you can continue with these next scripts in another screen 
+ 
+qiime feature-table filter-features \
+  --i-table ../table-or-100.qza \
+  --m-metadata-file sequence_misses.qza \
+  --o-filtered-table table-dada2_NoMisses100.qza \
+  --p-exclude-ids
+ 
+C. Remove all features with a total abundance of less than 10 
+         
+qiime feature-table filter-features \
+  --i-table table-dada2_NoMisses100.qza \
+  --p-min-frequency 10 \
+  --o-filtered-table table-dada2_NoMisses100_NoLessThan10.qza
+ 
+D.  Contingency-based filtering
+Contingency-based filtering is used to filter samples from a table contingent on the number of features they contain, or to filter features from a table contingent on the number of samples they’re observed in.
+This filtering is commonly used for filtering features that show up in only one or a few samples, based on the suspicion that these may not represent real biological diversity but rather PCR or sequencing errors (such as PCR chimeras). Features that are present in only a single sample could be filtered from a feature table as follows.
+
+qiime feature-table filter-features \
+  --i-table table-dada2_NoMisses100_NoLessThan10.qza \
+  --p-min-samples 2 \
+  --o-filtered-table table-dada2_NoMisses100_NoLessThan10_NoLessThan1Sample.qza
+
+ E.  Summarize final feature table and rep-seqs
+ 
+ ## if you don't have a metadata table made already, you can throw one together with this:
+ 
+ ../../Primer-Filtered/Merged/filtered_by_length > metadata.txt
+ cut -d"_" -f 1 metadata.txt > metadata_2.txt
+ sed '1 i #SampleID' metadata_2.txt > metadata_3.txt 
+ 
+qiime feature-table summarize \
+  --i-table table-dada2_NoMisses100_NoLessThan10_NoLessThan1Sample.qza \
+  --o-visualization table-dada2_NoMisses100_NoLessThan10_NoLessThan1Sample.qzv \
+  --m-sample-metadata-file metadata_3.txt
+
+qiime feature-table tabulate-seqs \
+  --i-data sequence_misses.qza \
+  --o-visualization sequence_misses.qzv
+  
+qiime tools view table.qzv
+qiime tools view rep-seqs-dada2.qzv
+
+
+  
+###############################################################################
+NEED TO REMOVE SEQUENCES FOUND IN BLANK
+=> run the blank sequences to identify the taxa, then remove. Alternatively, run all samples including blank and somehow remove the sequences found in blank.
+############################################################################### 
+ 
+ 
+7. Generate a tree for phylogenetic diversity analyses
+[a] Perform a multiple sequence alignment of the sequences in the FeatureData[Sequence] to create a FeatureData[AlignedSequence] QIIME 2 artifact. Here, the mafft program is used.
+  
+qiime alignment mafft \
+  --i-sequences sequence_hits.qza \
+  --o-alignment aligned-rep-seqs100_hits_vsearch_50percID_50percAln.qza
+  
+[b] Next, mask (or filter) the alignment to remove positions that are highly variable. These positions are generally considered to add noise to a resulting phylogenetic tree.
+
+qiime alignment mask \
+  --i-alignment aligned-rep-seqs100_hits_vsearch_50percID_50percAln.qza \
+  --o-masked-alignment MaskedAlignedRepSeqs100_hits_vsearch_50percID_50percAln.qza
+  
+  
+[c] Next, apply FastTree to generate a phylogenetic tree from the masked alignment.
+  
+qiime phylogeny fasttree \
+  --i-alignment MaskedAlignedRepSeqs100_hits_vsearch_50percID_50percAln.qza \
+  --o-tree unrooted-tree100.qza
+  
+[d] The FastTree program creates an unrooted tree, so in the final step in this section apply midpoint rooting to place the root of the tree at the midpoint of the longest tip-to-tip distance in the unrooted tree.
+
+qiime phylogeny midpoint-root \
+  --i-tree unrooted-tree100.qza \
+  --o-rooted-tree rooted-tree100.qza
+  
+
+[7] Alpha and beta diversity analysis
+A. Beta analysis
+  
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny rooted-tree100.qza \
+  --i-table table-dada2_NoMisses100_NoLessThan10_NoLessThan1Sample.qza \
+  --p-sampling-depth 5000 \
+  --m-metadata-file metadata_3.txt \
+  --output-dir core-metrics-results_5000
+  
+## if you want to keep files on the server but take up less space, migrate to containing folder and do this:
+
+tar -zcvf Primer-Filtered.tar.gz --remove-files Primer-Filtered/
