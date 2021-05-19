@@ -1,0 +1,381 @@
+SampleID,BarcodeSequence,LinkerPrimerSequence,Age,Age_weeks,Tissue,Flock,Flock2,AgeTissue,AgeTissueFlock,Weight_g,Bird#,NDV,REO,HEV,BA,MG,MM,MS,Description
+cC001,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,137,1,6103,229,3768,0,Negative,Negative,Negative,C001
+cC002,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,157,2,7713,1440,4934,2082,Negative,Negative,Negative,C002
+cC003,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,132,3,8852,741,5589,0,Negative,Negative,Negative,C003
+cC004,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,135,4,6414,1076,9686,0,Negative,Negative,Negative,C004
+cC005,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,163,5,7257,1694,6906,1826,Negative,Negative,Negative,C005
+cC006,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,153,6,8618,1497,2821,0,Negative,Negative,Negative,C006
+cC007,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,151,7,7949,796,8947,0,Negative,Negative,Negative,C007
+cC008,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,152,8,3531,2291,0,279,Negative,Negative,Negative,C008
+cC009,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,109,9,4425,612,4957,0,Negative,Negative,Negative,C009
+cC010,,,One,1,CE ,RD3 ,RD3 ,OneCE,OneCE_RD3,160,10,8326,470,8381,0,Negative,Negative,Negative,C010
+cC011,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,634,35,0,364,530,0,Negative,Negative,Negative,C011
+cC012,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,782,36,0,330,0,0,Negative,Negative,Negative,C012
+cC013,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,582,37,0,213,639,0,Negative,Negative,Negative,C013
+cC014,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,662,38,0,279,0,0,Negative,Negative,Negative,C014
+cC015,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,755,39,0,69,0,0,Negative,Negative,Negative,C015
+cC016,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,712,40,0,296,592,0,Negative,Negative,Negative,C016
+cC017,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,437,41,0,668,0,0,Negative,Negative,Negative,C017
+cC018,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,750,42,0,401,232,0,Negative,Negative,Negative,C018
+cC019,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,568,43,0,418,0,0,Negative,Negative,Negative,C019
+cC020,,,Three,3,CE ,RD3 ,RD3 ,ThreeCE,ThreeCE_RD3,753,44,0,488,0,0,Negative,Negative,Negative,C020
+cC021,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1204,55,0,759,793,312,Negative,Negative,Negative,C021
+cC022,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1499,56,0,964,286,0,Negative,Negative,Negative,C022
+cC023,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1708,57,0,116,220,0,Negative,Negative,Negative,C023
+cC024,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1663,58,0,279,209,0,Negative,Negative,Negative,C024
+cC025,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1540,59,0,401,292,0,Negative,Negative,Negative,C025
+cC026,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,959,60,0,213,655,0,Negative,Negative,Negative,C026
+cC027,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1237,61,0,279,206,0,Negative,Negative,Negative,C027
+cC028,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1259,62,0,330,407,0,Negative,Negative,Negative,C028
+cC029,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1362,63,0,541,1547,1143,Negative,Negative,Negative,C029
+cC030,,,Five,5,CE ,RD3 ,RD3 ,FiveCE,FiveCE_RD3,1374,64,0,612,249,0,Negative,Negative,Negative,C030
+cC031,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3500,75,0,1151,320,0,Negative,Negative,Negative,C031
+cC032,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3000,76,0,612,767,0,Negative,Negative,Negative,C032
+cC033,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3700,77,0,1189,0,0,Negative,Negative,Negative,C033
+cC034,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,2800,78,0,1020,5918,0,Negative,Negative,Negative,C034
+cC035,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3100,79,0,541,1072,0,Negative,Negative,Negative,C035
+cC036,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3300,80,0,668,823,0,Negative,Negative,Negative,C036
+cC037,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3500,81,0,559,538,954,Negative,Negative,Negative,C037
+cC038,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,2700,82,0,1420,801,708,Negative,Negative,Negative,C038
+cC039,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3800,83,0,741,0,0,Negative,Negative,Negative,C039
+cC040,,,Eight,8,CE ,RD3 ,RD3-DR,EightCE,EightCE_RD3,3300,84,0,470,400,0,Negative,Negative,Negative,C040
+cC041,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,9200,85,0,541,14089,0,Negative,Negative,Negative,C041
+cC042,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,7400,86,0,296,10452,0,Negative,Negative,Negative,C042
+cC043,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,8800,87,0,1971,12663,0,Negative,Negative,Negative,C043
+cC044,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,8600,88,0,1344,14636,481,Negative,Negative,Negative,C044
+cC045,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,7800,89,0,347,11396,0,Negative,Negative,Negative,C045
+cC046,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,7300,90,0,759,8417,0,Negative,Negative,Negative,C046
+cC047,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,8400,91,0,2311,19444,0,Negative,Negative,Negative,C047
+cC048,,,Twelve,12,CE ,RD3 ,RD3-DR,TwelveCE,TwelveCE_RD3,8500,92,0,290,9335,0,Negative,Negative,Negative,C048
+cC049,,,Sixteen,16,CE ,RD3 ,RD3-DR,SixteenCE,SixteenCE_RD3,14200,105,0,673,12586,0,Negative,Negative,Negative,C049
+cC050,,,Sixteen,16,CE ,RD3 ,RD3-DR,SixteenCE,SixteenCE_RD3,13600,106,0,3326,16106,0,Negative,Negative,Negative,C050
+cC051,,,Sixteen,16,CE ,RD3 ,RD3-DR,SixteenCE,SixteenCE_RD3,13400,107,0,203,10317,0,Negative,Negative,Negative,C051
+cC052,,,Sixteen,16,CE ,RD3 ,RD3-DR,SixteenCE,SixteenCE_RD3,13600,108,0,999,16303,0,Negative,Negative,Negative,C052
+cC053,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,152,14,4198,964,2476,4574,Negative,Negative,Negative,C053
+cC054,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,153,15,8310,418,1086,6400,Negative,Negative,Negative,C054
+cC055,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,152,16,2686,246,1966,0,Negative,Inconclusive,Inconclusive,C055
+cC056,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,189,17,5675,594,4002,0,Negative,Negative,Negative,C056
+cC057,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,152,18,4435,630,3008,3073,Negative,Negative,Negative,C057
+cC058,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,124,19,4167,401,1676,0,Negative,Negative,Negative,C058
+cC059,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,138,20,2673,559,3888,6687,Negative,Negative,Negative,C059
+cC060,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,119,21,0,814,3518,8559,Negative,Negative,Negative,C060
+cC061,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,110,22,5423,418,2210,8114,Negative,Negative,Negative,C061
+cC062,,,One,1,CE ,RD2 ,RD2 ,OneCE,OneCE_RD2,139,23,5442,1133,5431,6700,Negative,Negative,Negative,C062
+cC063,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,802,25,0,148,0,0,Negative,Negative,Negative,C063
+cC064,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,789,26,0,229,1563,0,Negative,Negative,Negative,C064
+cC065,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,526,27,2394,54,0,0,Negative,Negative,Negative,C065
+cC066,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,792,28,0,246,421,366,Negative,Negative,Negative,C066
+cC067,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,614,29,0,347,232,443,Negative,Negative,Negative,C067
+cC068,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,689,30,0,523,1182,887,Negative,Negative,Negative,C068
+cC069,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,457,31,0,296,482,1100,Negative,Negative,Negative,C069
+cC070,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,763,32,0,279,171,0,Negative,Negative,Negative,C070
+cC071,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,777,33,0,116,457,312,Negative,Negative,Negative,C071
+cC072,,,Three,3,CE ,RD2 ,RD2 ,ThreeCE,ThreeCE_RD2,749,34,0,246,0,0,Negative,Negative,Negative,C072
+cC073,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1281,45,0,116,171,0,Negative,Negative,Negative,C073
+cC074,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1642,46,0,164,238,0,Negative,Negative,Negative,C074
+cC075,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1745,47,0,668,840,0,Negative,Negative,Negative,C075
+cC076,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1680,48,0,435,0,0,Negative,Negative,Negative,C076
+cC077,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1655,49,0,279,0,0,Negative,Negative,Negative,C077
+cC078,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1442,50,0,347,206,0,Negative,Negative,Negative,C078
+cC079,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1593,51,0,296,486,0,Negative,Negative,Negative,C079
+cC080,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1513,52,0,541,158,0,Negative,Negative,Negative,C080
+cC081,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1418,53,0,1076,853,284,Negative,Negative,Negative,C081
+cC082,,,Five,5,CE ,RD2 ,RD2 ,FiveCE,FiveCE_RD2,1710,54,0,541,0,4190,Negative,Negative,Negative,C082
+cC083,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3600,65,0,296,519,576,Negative,Negative,Negative,C083
+cC084,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3800,66,0,612,708,371,Negative,Negative,Negative,C084
+cC085,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3400,67,0,364,215,341,Negative,Negative,Negative,C085
+cC086,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,4100,68,0,180,0,0,Negative,Negative,Negative,C086
+cC087,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3400,69,0,1420,176,0,Negative,Negative,Negative,C087
+cC088,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3600,70,0,541,226,0,Negative,Negative,Negative,C088
+cC089,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3400,71,0,347,314,0,Negative,Negative,Negative,C089
+cC090,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,4200,72,0,401,0,0,Negative,Negative,Negative,C090
+cC091,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3300,73,0,796,639,0,Negative,Negative,Negative,C091
+cC092,,,Eight,8,CE ,RD2 ,RD2-JF,EightCE,EightCE_RD2,3300,74,0,1189,2494,0,Negative,Negative,Negative,C092
+cC093,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,10300,93,0,1234,17792,0,Negative,Negative,Negative,C093
+cC094,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,10000,94,0,203,8736,0,Negative,Negative,Negative,C094
+cC095,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,9300,95,0,1473,11288,0,Negative,Negative,Negative,C095
+cC096,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,10000,96,0,1076,12106,0,Negative,Negative,Negative,C096
+cC097,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,8500,97,0,711,3598,0,Negative,Negative,Negative,C097
+cC098,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,9000,98,0,844,9160,0,Negative,Negative,Negative,C098
+cC099,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,9100,99,0,523,14295,0,Negative,Negative,Negative,C099
+cC100,,,Twelve,12,CE ,RD2 ,RD2-JF,TwelveCE,TwelveCE_RD2,8300,100,0,1076,14993,0,Negative,Negative,Negative,C100
+cC101,,,Sixteen,16,CE ,RD2 ,RD2-JF,SixteenCE,SixteenCE_RD2,17400,101,0,1432,13202,0,Negative,Negative,Negative,C101
+cC102,,,Sixteen,16,CE ,RD2 ,RD2-JF,SixteenCE,SixteenCE_RD2,16600,102,0,6198,14250,0,Negative,Negative,Negative,C102
+cC103,,,Sixteen,16,CE ,RD2 ,RD2-JF,SixteenCE,SixteenCE_RD2,17600,103,0,273,10499,0,Negative,Negative,Negative,C103
+cC104,,,Sixteen,16,CE ,RD2 ,RD2-JF,SixteenCE,SixteenCE_RD2,15000,104,0,1234,4381,0,Negative,Negative,Negative,C104
+cI105,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,137,1,6103,229,3768,0,Negative,Negative,Negative,I105
+cI106,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,157,2,7713,1440,4934,2082,Negative,Negative,Negative,I106
+cI107,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,132,3,8852,741,5589,0,Negative,Negative,Negative,I107
+cI108,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,135,4,6414,1076,9686,0,Negative,Negative,Negative,I108
+cI109,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,163,5,7257,1694,6906,1826,Negative,Negative,Negative,I109
+cI110,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,153,6,8618,1497,2821,0,Negative,Negative,Negative,I110
+cI111,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,151,7,7949,796,8947,0,Negative,Negative,Negative,I111
+cI112,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,152,8,3531,2291,0,279,Negative,Negative,Negative,I112
+cI113,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,109,9,4425,612,4957,0,Negative,Negative,Negative,I113
+cI114,,,One,1,IL ,RD3 ,RD3 ,OneIL,OneIL_RD3,160,10,8326,470,8381,0,Negative,Negative,Negative,I114
+cI115,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,634,35,0,364,530,0,Negative,Negative,Negative,I115
+cI116,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,782,36,0,330,0,0,Negative,Negative,Negative,I116
+cI117,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,582,37,0,213,639,0,Negative,Negative,Negative,I117
+cI118,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,662,38,0,279,0,0,Negative,Negative,Negative,I118
+cI119,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,755,39,0,69,0,0,Negative,Negative,Negative,I119
+cI120,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,712,40,0,296,592,0,Negative,Negative,Negative,I120
+cI121,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,437,41,0,668,0,0,Negative,Negative,Negative,I121
+cI122,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,750,42,0,401,232,0,Negative,Negative,Negative,I122
+cI123,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,568,43,0,418,0,0,Negative,Negative,Negative,I123
+cI124,,,Three,3,IL ,RD3 ,RD3 ,ThreeIL,ThreeIL_RD3,753,44,0,488,0,0,Negative,Negative,Negative,I124
+cI125,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1204,55,0,759,793,312,Negative,Negative,Negative,I125
+cI126,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1499,56,0,964,286,0,Negative,Negative,Negative,I126
+cI127,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1708,57,0,116,220,0,Negative,Negative,Negative,I127
+cI128,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1663,58,0,279,209,0,Negative,Negative,Negative,I128
+cI129,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1540,59,0,401,292,0,Negative,Negative,Negative,I129
+cI130,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,959,60,0,213,655,0,Negative,Negative,Negative,I130
+cI131,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1237,61,0,279,206,0,Negative,Negative,Negative,I131
+cI132,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1259,62,0,330,407,0,Negative,Negative,Negative,I132
+cI133,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1362,63,0,541,1547,1143,Negative,Negative,Negative,I133
+cI134,,,Five,5,IL ,RD3 ,RD3 ,FiveIL,FiveIL_RD3,1374,64,0,612,249,0,Negative,Negative,Negative,I134
+cI135,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3500,75,0,1151,320,0,Negative,Negative,Negative,I135
+cI136,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3000,76,0,612,767,0,Negative,Negative,Negative,I136
+cI137,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3700,77,0,1189,0,0,Negative,Negative,Negative,I137
+cI138,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,2800,78,0,1020,5918,0,Negative,Negative,Negative,I138
+cI139,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3100,79,0,541,1072,0,Negative,Negative,Negative,I139
+cI140,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3300,80,0,668,823,0,Negative,Negative,Negative,I140
+cI141,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3500,81,0,559,538,954,Negative,Negative,Negative,I141
+cI142,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,2700,82,0,1420,801,708,Negative,Negative,Negative,I142
+cI143,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3800,83,0,741,0,0,Negative,Negative,Negative,I143
+cI144,,,Eight,8,IL ,RD3 ,RD3-DR,EightIL,EightIL_RD3,3300,84,0,470,400,0,Negative,Negative,Negative,I144
+cI145,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,9200,85,0,541,14089,0,Negative,Negative,Negative,I145
+cI146,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,7400,86,0,296,10452,0,Negative,Negative,Negative,I146
+cI147,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,8800,87,0,1971,12663,0,Negative,Negative,Negative,I147
+cI148,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,8600,88,0,1344,14636,481,Negative,Negative,Negative,I148
+cI149,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,7800,89,0,347,11396,0,Negative,Negative,Negative,I149
+cI150,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,7300,90,0,759,8417,0,Negative,Negative,Negative,I150
+cI151,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,8400,91,0,2311,19444,0,Negative,Negative,Negative,I151
+cI152,,,Twelve,12,IL ,RD3 ,RD3-DR,TwelveIL,TwelveIL_RD3,8500,92,0,290,9335,0,Negative,Negative,Negative,I152
+cI153,,,Sixteen,16,IL ,RD3 ,RD3-DR,SixteenIL,SixteenIL_RD3,14200,105,0,673,12586,0,Negative,Negative,Negative,I153
+cI154,,,Sixteen,16,IL ,RD3 ,RD3-DR,SixteenIL,SixteenIL_RD3,13600,106,0,3326,16106,0,Negative,Negative,Negative,I154
+cI155,,,Sixteen,16,IL ,RD3 ,RD3-DR,SixteenIL,SixteenIL_RD3,13400,107,0,203,10317,0,Negative,Negative,Negative,I155
+cI156,,,Sixteen,16,IL ,RD3 ,RD3-DR,SixteenIL,SixteenIL_RD3,13600,108,0,999,16303,0,Negative,Negative,Negative,I156
+cI157,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,152,14,4198,964,2476,4574,Negative,Negative,Negative,I157
+cI158,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,153,15,8310,418,1086,6400,Negative,Negative,Negative,I158
+cI159,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,152,16,2686,246,1966,0,Negative,Inconclusive,Inconclusive,I159
+cI160,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,189,17,5675,594,4002,0,Negative,Negative,Negative,I160
+cI161,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,152,18,4435,630,3008,3073,Negative,Negative,Negative,I161
+cI162,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,124,19,4167,401,1676,0,Negative,Negative,Negative,I162
+cI163,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,138,20,2673,559,3888,6687,Negative,Negative,Negative,I163
+cI164,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,119,21,0,814,3518,8559,Negative,Negative,Negative,I164
+cI165,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,110,22,5423,418,2210,8114,Negative,Negative,Negative,I165
+cI166,,,One,1,IL ,RD2 ,RD2 ,OneIL,OneIL_RD2,139,23,5442,1133,5431,6700,Negative,Negative,Negative,I166
+cI167,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,802,25,0,148,0,0,Negative,Negative,Negative,I167
+cI168,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,789,26,0,229,1563,0,Negative,Negative,Negative,I168
+cI169,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,526,27,2394,54,0,0,Negative,Negative,Negative,I169
+cI170,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,792,28,0,246,421,366,Negative,Negative,Negative,I170
+cI171,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,614,29,0,347,232,443,Negative,Negative,Negative,I171
+cI172,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,689,30,0,523,1182,887,Negative,Negative,Negative,I172
+cI173,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,457,31,0,296,482,1100,Negative,Negative,Negative,I173
+cI174,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,763,32,0,279,171,0,Negative,Negative,Negative,I174
+cI175,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,777,33,0,116,457,312,Negative,Negative,Negative,I175
+cI176,,,Three,3,IL ,RD2 ,RD2 ,ThreeIL,ThreeIL_RD2,749,34,0,246,0,0,Negative,Negative,Negative,I176
+cI177,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1281,45,0,116,171,0,Negative,Negative,Negative,I177
+cI178,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1642,46,0,164,238,0,Negative,Negative,Negative,I178
+cI179,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1745,47,0,668,840,0,Negative,Negative,Negative,I179
+cI180,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1680,48,0,435,0,0,Negative,Negative,Negative,I180
+cI181,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1655,49,0,279,0,0,Negative,Negative,Negative,I181
+cI182,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1442,50,0,347,206,0,Negative,Negative,Negative,I182
+cI183,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1593,51,0,296,486,0,Negative,Negative,Negative,I183
+cI184,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1513,52,0,541,158,0,Negative,Negative,Negative,I184
+cI185,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1418,53,0,1076,853,284,Negative,Negative,Negative,I185
+cI186,,,Five,5,IL ,RD2 ,RD2 ,FiveIL,FiveIL_RD2,1710,54,0,541,0,4190,Negative,Negative,Negative,I186
+cI187,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3600,65,0,296,519,576,Negative,Negative,Negative,I187
+cI188,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3800,66,0,612,708,371,Negative,Negative,Negative,I188
+cI189,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3400,67,0,364,215,341,Negative,Negative,Negative,I189
+cI190,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,4100,68,0,180,0,0,Negative,Negative,Negative,I190
+cI191,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3400,69,0,1420,176,0,Negative,Negative,Negative,I191
+cI192,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3600,70,0,541,226,0,Negative,Negative,Negative,I192
+cI193,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3400,71,0,347,314,0,Negative,Negative,Negative,I193
+cI194,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,4200,72,0,401,0,0,Negative,Negative,Negative,I194
+cI195,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3300,73,0,796,639,0,Negative,Negative,Negative,I195
+cI196,,,Eight,8,IL ,RD2 ,RD2-JF,EightIL,EightIL_RD2,3300,74,0,1189,2494,0,Negative,Negative,Negative,I196
+cI197,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,10300,93,0,1234,17792,0,Negative,Negative,Negative,I197
+cI198,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,10000,94,0,203,8736,0,Negative,Negative,Negative,I198
+cI199,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,9300,95,0,1473,11288,0,Negative,Negative,Negative,I199
+cI200,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,10000,96,0,1076,12106,0,Negative,Negative,Negative,I200
+cI201,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,8500,97,0,711,3598,0,Negative,Negative,Negative,I201
+cI202,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,9000,98,0,844,9160,0,Negative,Negative,Negative,I202
+cI203,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,9100,99,0,523,14295,0,Negative,Negative,Negative,I203
+cI204,,,Twelve,12,IL ,RD2 ,RD2-JF,TwelveIL,TwelveIL_RD2,8300,100,0,1076,14993,0,Negative,Negative,Negative,I204
+cI205,,,Sixteen,16,IL ,RD2 ,RD2-JF,SixteenIL,SixteenIL_RD2,17400,101,0,1432,13202,0,Negative,Negative,Negative,I205
+cI206,,,Sixteen,16,IL ,RD2 ,RD2-JF,SixteenIL,SixteenIL_RD2,16600,102,0,6198,14250,0,Negative,Negative,Negative,I206
+cI207,,,Sixteen,16,IL ,RD2 ,RD2-JF,SixteenIL,SixteenIL_RD2,17600,103,0,273,10499,0,Negative,Negative,Negative,I207
+cI208,,,Sixteen,16,IL ,RD2 ,RD2-JF,SixteenIL,SixteenIL_RD2,15000,104,0,1234,4381,0,Negative,Negative,Negative,I208
+cT209,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,137,1,6103,229,3768,0,Negative,Negative,Negative,T209
+cT210,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,157,2,7713,1440,4934,2082,Negative,Negative,Negative,T210
+cT211,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,132,3,8852,741,5589,0,Negative,Negative,Negative,T211
+cT212,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,135,4,6414,1076,9686,0,Negative,Negative,Negative,T212
+cT213,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,163,5,7257,1694,6906,1826,Negative,Negative,Negative,T213
+cT214,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,153,6,8618,1497,2821,0,Negative,Negative,Negative,T214
+cT215,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,151,7,7949,796,8947,0,Negative,Negative,Negative,T215
+cT216,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,152,8,3531,2291,0,279,Negative,Negative,Negative,T216
+cT217,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,109,9,4425,612,4957,0,Negative,Negative,Negative,T217
+cT218,,,One,1,TW,RD3 ,RD3 ,OneTW,OneTW_RD3,160,10,8326,470,8381,0,Negative,Negative,Negative,T218
+cT219,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,634,35,0,364,530,0,Negative,Negative,Negative,T219
+cT220,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,782,36,0,330,0,0,Negative,Negative,Negative,T220
+cT221,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,582,37,0,213,639,0,Negative,Negative,Negative,T221
+cT222,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,662,38,0,279,0,0,Negative,Negative,Negative,T222
+cT223,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,755,39,0,69,0,0,Negative,Negative,Negative,T223
+cT224,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,712,40,0,296,592,0,Negative,Negative,Negative,T224
+cT225,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,437,41,0,668,0,0,Negative,Negative,Negative,T225
+cT226,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,750,42,0,401,232,0,Negative,Negative,Negative,T226
+cT227,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,568,43,0,418,0,0,Negative,Negative,Negative,T227
+cT228,,,Three,3,TW,RD3 ,RD3 ,ThreeTW,ThreeTW_RD3,753,44,0,488,0,0,Negative,Negative,Negative,T228
+cT229,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1204,55,0,759,793,312,Negative,Negative,Negative,T229
+cT230,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1499,56,0,964,286,0,Negative,Negative,Negative,T230
+cT231,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1708,57,0,116,220,0,Negative,Negative,Negative,T231
+cT232,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1663,58,0,279,209,0,Negative,Negative,Negative,T232
+cT233,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1540,59,0,401,292,0,Negative,Negative,Negative,T233
+cT234,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,959,60,0,213,655,0,Negative,Negative,Negative,T234
+cT235,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1237,61,0,279,206,0,Negative,Negative,Negative,T235
+cT236,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1259,62,0,330,407,0,Negative,Negative,Negative,T236
+cT237,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1362,63,0,541,1547,1143,Negative,Negative,Negative,T237
+cT238,,,Five,5,TW,RD3 ,RD3 ,FiveTW,FiveTW_RD3,1374,64,0,612,249,0,Negative,Negative,Negative,T238
+cT239,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3500,75,0,1151,320,0,Negative,Negative,Negative,T239
+cT240,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3000,76,0,612,767,0,Negative,Negative,Negative,T240
+cT241,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3700,77,0,1189,0,0,Negative,Negative,Negative,T241
+cT242,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,2800,78,0,1020,5918,0,Negative,Negative,Negative,T242
+cT243,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3100,79,0,541,1072,0,Negative,Negative,Negative,T243
+cT244,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3300,80,0,668,823,0,Negative,Negative,Negative,T244
+cT245,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3500,81,0,559,538,954,Negative,Negative,Negative,T245
+cT246,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,2700,82,0,1420,801,708,Negative,Negative,Negative,T246
+cT247,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3800,83,0,741,0,0,Negative,Negative,Negative,T247
+cT248,,,Eight,8,TW,RD3 ,RD3-DR,EIghtTW,EIghtTW_RD3,3300,84,0,470,400,0,Negative,Negative,Negative,T248
+cT249,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,9200,85,0,541,14089,0,Negative,Negative,Negative,T249
+cT250,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,7400,86,0,296,10452,0,Negative,Negative,Negative,T250
+cT251,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,8800,87,0,1971,12663,0,Negative,Negative,Negative,T251
+cT252,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,8600,88,0,1344,14636,481,Negative,Negative,Negative,T252
+cT253,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,7800,89,0,347,11396,0,Negative,Negative,Negative,T253
+cT254,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,7300,90,0,759,8417,0,Negative,Negative,Negative,T254
+cT255,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,8400,91,0,2311,19444,0,Negative,Negative,Negative,T255
+cT256,,,Twelve,12,TW,RD3 ,RD3-DR,TwelveTW,TwelveTW_RD3,8500,92,0,290,9335,0,Negative,Negative,Negative,T256
+cT257,,,Sixteen,16,TW,RD3 ,RD3-DR,SixteenTW,SixteenTW_RD3,14200,105,0,673,12586,0,Negative,Negative,Negative,T257
+cT258,,,Sixteen,16,TW,RD3 ,RD3-DR,SixteenTW,SixteenTW_RD3,13600,106,0,3326,16106,0,Negative,Negative,Negative,T258
+cT259,,,Sixteen,16,TW,RD3 ,RD3-DR,SixteenTW,SixteenTW_RD3,13400,107,0,203,10317,0,Negative,Negative,Negative,T259
+cT260,,,Sixteen,16,TW,RD3 ,RD3-DR,SixteenTW,SixteenTW_RD3,13600,108,0,999,16303,0,Negative,Negative,Negative,T260
+cT261,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,152,14,4198,964,2476,4574,Negative,Negative,Negative,T261
+cT262,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,153,15,8310,418,1086,6400,Negative,Negative,Negative,T262
+cT263,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,152,16,2686,246,1966,0,Negative,Inconclusive,Inconclusive,T263
+cT264,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,189,17,5675,594,4002,0,Negative,Negative,Negative,T264
+cT265,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,152,18,4435,630,3008,3073,Negative,Negative,Negative,T265
+cT266,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,124,19,4167,401,1676,0,Negative,Negative,Negative,T266
+cT267,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,138,20,2673,559,3888,6687,Negative,Negative,Negative,T267
+cT268,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,119,21,0,814,3518,8559,Negative,Negative,Negative,T268
+cT269,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,110,22,5423,418,2210,8114,Negative,Negative,Negative,T269
+cT270,,,One,1,TW,RD2 ,RD2 ,OneTW,OneTW_RD2,139,23,5442,1133,5431,6700,Negative,Negative,Negative,T270
+cT271,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,802,25,0,148,0,0,Negative,Negative,Negative,T271
+cT272,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,789,26,0,229,1563,0,Negative,Negative,Negative,T272
+cT273,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,526,27,2394,54,0,0,Negative,Negative,Negative,T273
+cT274,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,792,28,0,246,421,366,Negative,Negative,Negative,T274
+cT275,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,614,29,0,347,232,443,Negative,Negative,Negative,T275
+cT276,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,689,30,0,523,1182,887,Negative,Negative,Negative,T276
+cT277,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,457,31,0,296,482,1100,Negative,Negative,Negative,T277
+cT278,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,763,32,0,279,171,0,Negative,Negative,Negative,T278
+cT279,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,777,33,0,116,457,312,Negative,Negative,Negative,T279
+cT280,,,Three,3,TW,RD2 ,RD2 ,ThreeTW,ThreeTW_RD2,749,34,0,246,0,0,Negative,Negative,Negative,T280
+cT281,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1281,45,0,116,171,0,Negative,Negative,Negative,T281
+cT282,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1642,46,0,164,238,0,Negative,Negative,Negative,T282
+cT283,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1745,47,0,668,840,0,Negative,Negative,Negative,T283
+cT284,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1680,48,0,435,0,0,Negative,Negative,Negative,T284
+cT285,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1655,49,0,279,0,0,Negative,Negative,Negative,T285
+cT286,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1442,50,0,347,206,0,Negative,Negative,Negative,T286
+cT287,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1593,51,0,296,486,0,Negative,Negative,Negative,T287
+cT288,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1513,52,0,541,158,0,Negative,Negative,Negative,T288
+cT289,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1418,53,0,1076,853,284,Negative,Negative,Negative,T289
+cT290,,,Five,5,TW,RD2 ,RD2 ,FiveTW,FiveTW_RD2,1710,54,0,541,0,4190,Negative,Negative,Negative,T290
+cT291,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3600,65,0,296,519,576,Negative,Negative,Negative,T291
+cT292,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3800,66,0,612,708,371,Negative,Negative,Negative,T292
+cT293,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3400,67,0,364,215,341,Negative,Negative,Negative,T293
+cT294,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,4100,68,0,180,0,0,Negative,Negative,Negative,T294
+cT295,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3400,69,0,1420,176,0,Negative,Negative,Negative,T295
+cT296,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3600,70,0,541,226,0,Negative,Negative,Negative,T296
+cT297,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3400,71,0,347,314,0,Negative,Negative,Negative,T297
+cT298,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,4200,72,0,401,0,0,Negative,Negative,Negative,T298
+cT299,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3300,73,0,796,639,0,Negative,Negative,Negative,T299
+cT300,,,Eight,8,TW,RD2 ,RD2-JF,EIghtTW,EIghtTW_RD2,3300,74,0,1189,2494,0,Negative,Negative,Negative,T300
+cT301,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,10300,93,0,1234,17792,0,Negative,Negative,Negative,T301
+cT302,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,10000,94,0,203,8736,0,Negative,Negative,Negative,T302
+cT303,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,9300,95,0,1473,11288,0,Negative,Negative,Negative,T303
+cT304,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,10000,96,0,1076,12106,0,Negative,Negative,Negative,T304
+cT305,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,8500,97,0,711,3598,0,Negative,Negative,Negative,T305
+cT306,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,9000,98,0,844,9160,0,Negative,Negative,Negative,T306
+cT307,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,9100,99,0,523,14295,0,Negative,Negative,Negative,T307
+cT308,,,Twelve,12,TW,RD2 ,RD2-JF,TwelveTW,TwelveTW_RD2,8300,100,0,1076,14993,0,Negative,Negative,Negative,T308
+cT309,,,Sixteen,16,TW,RD2 ,RD2-JF,SixteenTW,SixteenTW_RD2,17400,101,0,1432,13202,0,Negative,Negative,Negative,T309
+cT310,,,Sixteen,16,TW,RD2 ,RD2-JF,SixteenTW,SixteenTW_RD2,16600,102,0,6198,14250,0,Negative,Negative,Negative,T310
+cT311,,,Sixteen,16,TW,RD2 ,RD2-JF,SixteenTW,SixteenTW_RD2,17600,103,0,273,10499,0,Negative,Negative,Negative,T311
+cT312,,,Sixteen,16,TW,RD2 ,RD2-JF,SixteenTW,SixteenTW_RD2,15000,104,0,1234,4381,0,Negative,Negative,Negative,T312
+cSW313,,,One,1,SW,RD3,RD3,OneSW,OneSW_RD3,145,Pooled (1-5),7267.8,1036,6176.6,781.6,Negative,Negative,Negative,SW313
+cSW314,,,One,1,SW,RD3,RD3,OneSW,OneSW_RD3,141,Pooled (6-9),6130.75,1299,4181.25,69.75,Negative,Negative,Negative,SW314
+cSW315,,,Three,3,SW,RD3,RD3,ThreeSW,ThreeSW_RD3,708,Pooled (35 & 36),0,347,265,0,Negative,Negative,Negative,SW315
+cSW316,,,Three,3,SW,RD3,RD3,ThreeSW,ThreeSW_RD3,622,Pooled (37-38),0,271.5,319.5,0,Negative,Negative,Negative,SW316
+cSW317,,,Three,3,SW,RD3,RD3,ThreeSW,ThreeSW_RD3,734,Pooled (39-40),0,182.5,296,0,Negative,Negative,Negative,SW317
+cSW318,,,Three,3,SW,RD3,RD3,ThreeSW,ThreeSW_RD3,594,Pooled (41-42),0,534.5,116,0,Negative,Negative,Negative,SW318
+cSW319,,,Three,3,SW,RD3,RD3,ThreeSW,ThreeSW_RD3,660,Pooled (43-44),0,453,0,0,Negative,Negative,Negative,SW319
+cSW320,,,Five,5,SW,RD3,RD3,FiveSW,FiveSW_RD3,1351,Pooled(55-56),0,861.5,539.5,156,Negative,Negative,Negative,SW320
+cSW321,,,Five,5,SW,RD3,RD3,FiveSW,FiveSW_RD3,1686,Pooled(57-58),0,197.5,214.5,0,Negative,Negative,Negative,SW321
+cSW322,,,Five,5,SW,RD3,RD3,FiveSW,FiveSW_RD3,1249,Pooled(59-60),0,307,473.5,0,Negative,Negative,Negative,SW322
+cSW323,,,Five,5,SW,RD3,RD3,FiveSW,FiveSW_RD3,1248,Pooled(61-62),0,304.5,306.5,0,Negative,Negative,Negative,SW323
+cSW324,,,Five,5,SW,RD3,RD3,FiveSW,FiveSW_RD3,1368,Pooled(63-64),0,576.5,898,571.5,Negative,Negative,Negative,SW324
+cSW325,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3500,75,0,1151,320,0,Negative,Negative,Negative,SW325
+cSW326,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3000,76,0,612,767,0,Negative,Negative,Negative,SW326
+cSW327,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3700,77,0,1189,0,0,Negative,Negative,Negative,SW327
+cSW328,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,2800,78,0,1020,5918,0,Negative,Negative,Negative,SW328
+cSW329,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3100,79,0,541,1072,0,Negative,Negative,Negative,SW329
+cSW330,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3300,80,0,668,823,0,Negative,Negative,Negative,SW330
+cSW331,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3500,81,0,559,538,954,Negative,Negative,Negative,SW331
+cSW332,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,2700,82,0,1420,801,708,Negative,Negative,Negative,SW332
+cSW333,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3800,83,0,741,0,0,Negative,Negative,Negative,SW333
+cSW334,,,Eight,8,SW,RD3,RD3-DR,EightSW,EightSW_RD3,3300,84,0,470,400,0,Negative,Negative,Negative,SW334
+cSW335,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,9200,85,0,541,14089,0,Negative,Negative,Negative,SW335
+cSW336,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,7400,86,0,296,10452,0,Negative,Negative,Negative,SW336
+cSW337,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,8800,87,0,1971,12663,0,Negative,Negative,Negative,SW337
+cSW338,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,8600,88,0,1344,14636,481,Negative,Negative,Negative,SW338
+cSW339,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,7800,89,0,347,11396,0,Negative,Negative,Negative,SW339
+cSW340,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,7300,90,0,759,8417,0,Negative,Negative,Negative,SW340
+cSW341,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,8400,91,0,2311,19444,0,Negative,Negative,Negative,SW341
+cSW342,,,Twelve,12,SW,RD3,RD3-DR,TwelveSW,TwelveSW_RD3,8500,92,0,290,9335,0,Negative,Negative,Negative,SW342
+cSW343,,,Sixteen,16,SW,RD3,RD3-DR,SixteenSW,SixteenSW_RD3,14200,105,0,673,12586,0,Negative,Negative,Negative,SW343
+cSW344,,,Sixteen,16,SW,RD3,RD3-DR,SixteenSW,SixteenSW_RD3,13600,106,0,3326,16106,0,Negative,Negative,Negative,SW344
+cSW345,,,Sixteen,16,SW,RD3,RD3-DR,SixteenSW,SixteenSW_RD3,13400,107,0,203,10317,0,Negative,Negative,Negative,SW345
+cSW346,,,Sixteen,16,SW,RD3,RD3-DR,SixteenSW,SixteenSW_RD3,13600,108,0,999,16303,0,Negative,Negative,Negative,SW346
+cSW347,,,One,1,SW,RD2 ,RD2 ,OneSW,OneSW_RD2,154,Pooled(13-17),4173.8,552.6,2128.8,2348.8,Negative,Negative,Negative,SW347
+cSW348,,,One,1,SW,RD2 ,RD2 ,OneSW,OneSW_RD2,133,Pooled(18-21),2818.75,601,3022.5,4579.75,Negative,Negative,Negative,SW348
+cSW349,,,Three,3,SW,RD2 ,RD2 ,ThreeSW,ThreeSW_RD2,797,Pooled(25&28),0,197,210.5,183,Negative,Negative,Negative,SW349
+cSW350,,,Three,3,SW,RD2 ,RD2 ,ThreeSW,ThreeSW_RD2,658,Pooled(26-27),1197,141.5,781.5,0,Negative,Negative,Negative,SW350
+cSW351,,,Three,3,SW,RD2 ,RD2 ,ThreeSW,ThreeSW_RD2,651,Pooled(29-30),0,435,707,665,Negative,Negative,Negative,SW351
+cSW352,,,Three,3,SW,RD2 ,RD2 ,ThreeSW,ThreeSW_RD2,610,Pooled(31-32),0,287.5,326.5,550,Negative,Negative,Negative,SW352
+cSW353,,,Three,3,SW,RD2 ,RD2 ,ThreeSW,ThreeSW_RD2,763,Pooled(33-34),0,181,228.5,156,Negative,Negative,Negative,SW353
+cSW354,,,Five,5,SW,RD2 ,RD2 ,FiveSW,FiveSW_RD2,1461,Pooled(45-46),0,116,171,0,Negative,Negative,Negative,SW354
+cSW355,,,Five,5,SW,RD2 ,RD2 ,FiveSW,FiveSW_RD2,1712,Pooled(47-48),0,551.5,420,0,Negative,Negative,Negative,SW355
+cSW356,,,Five,5,SW,RD2 ,RD2 ,FiveSW,FiveSW_RD2,1548,Pooled(49-50),0,313,103,0,Negative,Negative,Negative,SW356
+cSW357,,,Five,5,SW,RD2 ,RD2 ,FiveSW,FiveSW_RD2,1553,Pooled(51-52),0,418.5,322,0,Negative,Negative,Negative,SW357
+cSW358,,,Five,5,SW,RD2 ,RD2 ,FiveSW,FiveSW_RD2,1564,Pooled(53-54),0,808.5,426.5,2237,Negative,Negative,Negative,SW358
+cSW359,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3600,65,0,296,519,576,Negative,Negative,Negative,SW359
+cSW360,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3800,66,0,612,708,371,Negative,Negative,Negative,SW360
+cSW361,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3400,67,0,364,215,341,Negative,Negative,Negative,SW361
+cSW362,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,4100,68,0,180,0,0,Negative,Negative,Negative,SW362
+cSW363,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3400,69,0,1420,176,0,Negative,Negative,Negative,SW363
+cSW364,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3600,70,0,541,226,0,Negative,Negative,Negative,SW364
+cSW365,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3400,71,0,347,314,0,Negative,Negative,Negative,SW365
+cSW366,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,4200,72,0,401,0,0,Negative,Negative,Negative,SW366
+cSW367,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3300,73,0,796,639,0,Negative,Negative,Negative,SW367
+cSW368,,,Eight,8,SW,RD2 ,RD2-JF,EightSW,EightSW_RD2,3300,74,0,1189,2494,0,Negative,Negative,Negative,SW368
+cSW369,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,10300,93,0,1234,17792,0,Negative,Negative,Negative,SW369
+cSW370,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,10000,94,0,203,8736,0,Negative,Negative,Negative,SW370
+cSW371,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,9300,95,0,1473,11288,0,Negative,Negative,Negative,SW371
+cSW372,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,10000,96,0,1076,12106,0,Negative,Negative,Negative,SW372
+cSW373,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,8500,97,0,711,3598,0,Negative,Negative,Negative,SW373
+cSW374,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,9000,98,0,844,9160,0,Negative,Negative,Negative,SW374
+cSW375,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,9100,99,0,523,14295,0,Negative,Negative,Negative,SW375
+cSW376,,,Twelve,12,SW,RD2 ,RD2-JF,TwelveSW,TwelveSW_RD2,8300,100,0,1076,14993,0,Negative,Negative,Negative,SW376
+cSW377,,,Sixteen,16,SW,RD2 ,RD2-JF,SixteenSW,SixteenSW_RD2,17400,101,0,1432,13202,0,Negative,Negative,Negative,SW377
+cSW378,,,Sixteen,16,SW,RD2 ,RD2-JF,SixteenSW,SixteenSW_RD2,16600,102,0,6198,14250,0,Negative,Negative,Negative,SW378
+cSW379,,,Sixteen,16,SW,RD2 ,RD2-JF,SixteenSW,SixteenSW_RD2,17600,103,0,273,10499,0,Negative,Negative,Negative,SW379
+cSW380,,,Sixteen,16,SW,RD2 ,RD2-JF,SixteenSW,SixteenSW_RD2,15000,104,0,1234,4381,0,Negative,Negative,Negative,SW380

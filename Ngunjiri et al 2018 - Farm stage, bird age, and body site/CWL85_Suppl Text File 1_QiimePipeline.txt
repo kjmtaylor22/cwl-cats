@@ -1,0 +1,241 @@
+Farm stage, bird age and body site dominantly affect the quantity, taxonomic composition, and dynamics of respiratory and gut microbiota of commercial layer chickens 
+John M. Ngunjiri1*, Kara J. M. Taylor1*, Michael C. Abundo1,2*, Hyesun Jang1,2, Mohamed Elaish1,2, Mahesh KC1,2, Amir Ghorbani1,2, Saranga Wijeratne3, Bonnie P. Weber4, Timothy J. Johnson4,5, Chang-Won Lee1,2,‡
+1Food Animal Health Research Program, Ohio Agricultural Research and Development Center, The Ohio State University, Wooster, Ohio, USA 
+2Department of Veterinary Preventive Medicine, College of Veterinary Medicine, The Ohio State University, Columbus, Ohio, USA
+3Molecular & Cellular Imaging Center, Ohio Agricultural Research and Development Center, The Ohio State University, Wooster, Ohio, USA
+4Department of Veterinary and Biomedical Sciences, University of Minnesota, Saint Paul, Minnesota, USA
+5Mid-Central Research and Outreach Center, University of Minnesota, Willmar, Minnesota, USA
+
+
+All software packages used for sequence processing were managed through the Environment Modules System. They were loaded through 
+ 
+STEP 1.  Sequence quality check using FastQC (Fastqc-0.10.1)
+	(https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) 
+	
+cd to_fastq_file_directory
+mkdir FastQC
+module load Fastqc-0.10.1
+fastqc *.fastq --outdir FastQC  
+#run all .fastq files through FastQC Application and save the results in a folder named FastQC. 
+
+STEP 2 Trim Nextera primer sequences using the BBDuk package of the BBTools suite (BBTools/v35)
+a. Trim adapters
+
+cd the_directory_with_fastq.gz_folders
+mkdir bbduck_adapter_trimmed
+module load BBTools/v35
+	
+files_1=(*_R1_001.fastq.gz);files_2=(*_R2_001.fastq.gz);sorted_files_1=($(printf "%s\n" "${files_1[@]}" | sort -u));sorted_files_2=($(printf "%s\n" "${files_2[@]}" | sort -u));for ((i=0; i<${#sorted_files_1[@]}; i+=1)); do bbduk.sh -Xmx20g in1=${sorted_files_1[i]} in2=${sorted_files_2[i]} out1=bbduck_adapter_trimmed/${sorted_files_1[i]%%.*}.fastq out2=bbduck_adapter_trimmed/${sorted_files_2[i]%%.*}.fastq ref=$ADAPTSEQ/nextera.fa.gz ktrim=r k=23 mink=11 hdist=1 tpe tbo &>bbduck_adapter_trimmed/${sorted_files_2[i]%%.*}.log;done	
+
+OUTPUT --> R1 and R2 files without Nextera adapter sequences 
+
+b. Cleanup --> consolidate log files
+
+cd bbduck_adapter_trimmed
+mkdir logs
+mv *.log ./logs
+
+STEP 3 16S primer removal using Cutadapt (Cutadapt/1.8.1)
+mkdir Primer-Filtered
+cd to_directory_with_primer-rm-cutadapt.sh_script_file
+module load Cutadapt/1.8.1
+bash primer-rm-cutadapt.sh
+OUTPUT --> R1 and R2 files without 16S primer sequences stored in the "Primer-Filtered" directory
+
+***** primer-rm-cutadapt.sh script ******
+
+working_dir=path_to_working_directory (Primer-Filtered)
+
+raw_data=path_to_directory_with_Nextera-trimmed_sequences (bbduck_adapter_trimmed)
+
+tag5='GAGTGCCAGCMGCCGCGGTAA'
+tag5_R='ACGGACTACHVGGGTWTCTAAT'
+      
+
+rm -rf $working_dir
+mkdir $working_dir
+mkdir $working_dir/fastq
+
+cd $raw_data
+
+gzip -d *
+
+ls *.fastq > $raw_data/list.txt
+
+while read R1
+do read R2
+
+echo "Working on $R1 $R2"
+
+A="$( echo $R1 | cut -d'_' -f1 | sed s'/TOS//')"
+B="$( echo $R1 | cut -d'_' -f2 | sed s'/S//')"
+out_name_R1=$A"_"$B"_L001_R1_001"
+out_name_R2=$A"_"$B"_L001_R2_001"
+echo $out_name_R1
+
+cutadapt -g $tag5 -G $tag5_R -o $working_dir/$out_name_R1".fastq"  -p $working_dir/$out_name_R2".fastq" $R1  $R2 -j 35 -e 0.2 -m 50
+
+
+gzip $working_dir/$out_name_R1".fastq" 
+gzip $working_dir/$out_name_R2".fastq"
+
+mv $working_dir/*.gz $working_dir/fastq/
+done< $raw_data/list.txt
+
+***********************************************
+
+STEP 4. Merge paired reads with the BBMerge package of the BBTools suite (BBTools/v35)
+
+cd Primer-Filtered
+mkdir Merged
+mkdir UnMerged
+mkdir Logs_Merged
+module load BBTools/v35
+
+files_1=(*_R1_001.fastq.gz);files_2=(*_R2_001.fastq.gz);sorted_files_1=($(printf "%s\n" "${files_1[@]}" | sort -u));sorted_files_2=($(printf "%s\n" "${files_2[@]}" | sort -u));for ((i=0; i<${#sorted_files_1[@]}; i+=1)); do bbmerge-auto.sh in1=${sorted_files_1[i]} in2=${sorted_files_2[i]} out=Merged/${sorted_files_1[i]%%.*}.fastq  outu1=UnMerged/UnMerged_${sorted_files_1[i]%%.*}.fastq outu2=UnMerged/UnMerged_${sorted_files_2[i]%%.*}.fastq ihist=Logs_Merged/${sorted_files_2[i]%%.*}.hist ecct extend2=20 iterations=5 &>Logs_Merged/${sorted_files_2[i]%%.*}.log;done
+
+OUTPUTS --> fastq files with Merged R1 and R2 sequences --> Merged 
+		--> fastq files with UnMerged R1 and R2 sequences --> UnMerged 
+		--> log files for merged sequences --> Logs_Merged  
+
+STEP 5. Join sequences into a single fasta file using QIIME (Qiime-1.9)
+
+cd Merged
+module load Qiime-1.9
+multiple_split_libraries_fastq.py -i Merged -o joined   --sampleid_indicator=.fastq
+
+OUTPUT --> seqs.fna fasta file (with all sequences)
+
+
+STEP 6. Filter reads less than 245 and greater than 260 using Mothur (Mothur-1.35)
+cd directory_with_seqs.fna
+module load Mothur-1.35
+mothur
+screen.seqs(fasta=seqs.fna, minlength=245, maxlength=260)
+OUTPUT --> seqs.good.fna 
+
+STEP 7. Remove Chimeras Mothur [Note: the chimera removal job will take 2 to 3 days. You can increase the number of processors to 50 to run the job faster]
+[http://mealybugs-metagenomics.readthedocs.io/en/latest/05_removing_chimeras.html]
+
+cd directory_with_seqs.good.fna
+
+a. Identify chimeras using silva.gold.align reference database 
+mothur
+chimera.uchime(fasta=seqs.good.fna, reference=silva.gold.align, processors=40)[Note: the chimera removal job will take 2 to 3 days. You can increase the number of processors to 50 to run the job faster]
+
+OUTPUTS --> many files including "seqs.good.uchime.accnos"
+
+b. remove chimeras 
+mothur
+remove.seqs(fasta=seqs.good.fna, accnos= seqs.good.uchime.accnos)
+
+OUTPUT --> seqs.good.pick.fna
+
+STEP 8. Open reference OTU picking in QIIME (Qiime-1.9)
+module load Qiime-1.9
+pick_open_reference_otus.py -i $PWD/seqs.good.pick.fna -o $PWD/uclust_10_percent_no_chimeras/ -s 0.1 -aO 40
+
+OUTPUTs --> several files and folders. Default taxonomic classification is based on RDP database (Last updated in 2012) 
+
+
+STEP 9. Reclassification using SILVA database release 132
+
+cd directory-with-where-you-want-to-perform-reclassification
+
+# the directory should contain: 
+SILVA_132_QIIME_release sub-directory with majority_taxonomy_7_levels.txt file
+parse_nonstandard_chars.py script file (see below)
+rep_set.fna file from STEP 8
+final_otu_map_mc2.txt OTU map file from STEP 8
+rdp_classifier-2.2.jar
+
+#other requirements --> python2.7
+ 
+a. Remove any non-ASCII characters from the newly created taxonomy file using the parse_nonstandard_chars.py script 	
+
+python2.7 parse_nonstandard_chars.py ./SILVA_132_QIIME_release/taxonomy/16S_only/97/majority_taxonomy_7_levels.txt > majority_taxonomy_7_levels_parsed.txt
+
+OUTPUT --> majority_taxonomy_7_levels_parsed.txt
+
+******** parse_nonstandard_chars.py script **************
+
+#!/usr/bin/env python
+
+"""Somewhat hackish way to eliminate non-ASCII characters in a text file,
+such as a taxonomy mapping file, with QIIME. Reads through the file, and 
+removes all characters above decimal value 127. Additionally, asterisk "*"
+characters are removed, as these inhibit the RDP classifier.
+Usage:
+python parse_nonstandard_chars.py X > Y
+where X is the input file to be parsed, and Y is the output parsed file"""
+
+from sys import argv
+
+
+taxa_mapping = open(argv[1], "U")
+
+for line in taxa_mapping:
+    curr_line = line.strip()
+
+    try:
+        curr_line.decode('ascii')
+        if "*" in curr_line:
+            raise(ValueError)
+        print curr_line
+    except:
+        fixed_line = ""
+        for n in curr_line:
+            if ord(n) < 128 and n != "*":
+                fixed_line += n
+        print fixed_line
+
+******************************************************
+
+b. Let the shell know where to to locate the rdp classifier
+
+echo "export RDP_JAR_PATH=path-to-rdp_classifier-2.2.jar" >> /home/ngunjiri1/.bashrc
+source /home/ngunjiri1/.bashrc
+#proceed to c below
+
+c.  Assign taxonomy in QIIME (Qiime-1.9)
+module load Qiime-1.9
+
+a.  assign taxomonomy 
+assign_taxonomy.py -i rep_set.fna -t majority_taxonomy_7_levels_parsed.txt -r ./SILVA_132_QIIME_release/rep_set/rep_set_16S_only/97/silva_132_97_16S.fna -m rdp  --rdp_max_memory 700000
+
+OUTPUT --> rep_set_tax_assignments
+
+b.Rebuild the OTU table with the new taxonomic information
+
+make_otu_table.py -i final_otu_map_mc2.txt --taxonomy rep_set_tax_assignments.txt -o otus/otu_table_SILVA.biom
+
+OUTPUT --> otu_table_SILVA.biom
+ 
+
+STEP 10. BIOM (community) table filtering using QIIME (Qiime-1.9)
+#needed: ootu_table_SILVA.biom file from STEP 9b
+
+module load Qiime-1.9
+
+a. Filter OTUs that are not bacteria
+filter_taxa_from_otu_table.py -i otu_table_SILVA.biom -o otu_table_SILVA_bacteriaOnly.biom -p k__Bacteria
+
+b. Filter OTU table to remove OTUs with less than 10 count
+filter_otus_from_otu_table.py -i otu_table_SILVA_bacteriaOnly.biom -o otu_table_SILVA_bacteriaOnly_no_less_than_10.biom -n 10
+
+c.  Filter out OTUs classified as cyanobacteria or mitocondria
+filter_taxa_from_otu_table.py -i otu_table_SILVA_bacteriaOnly_no_less_than_10.biom -o otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria.biom -n p__Cyanobacteria,f__mitochondria
+
+STEP 11. Rarefy biom tables to 5000 sequences per sample using QIIME (Qiime-1.9)
+#Need biom table from STEP 10c
+
+module load Qiime-1.9
+single_rarefaction.py -i otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria.biom -o otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria_rare5000.biom -d 5000
+OUTPUT --> otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria_rare5000.biom
+
+STEP 12. Convert the rarefied BIOM table to text format in QIIME (Qiime-1.9)
+module load Qiime-1.9
+
+biom convert -i otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria_rare5000.biom  -o otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria_rare5000.biom.txt --to-tsv --header-key taxonomy
+
+OUTPUT --> R-friendly community table (otu_table_SILVA_bacteriaOnly_no_less_than_10_NoMitochondriaCyanobacteria_rare5000.biom.txt)
