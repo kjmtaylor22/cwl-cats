@@ -5,8 +5,6 @@ library(ggplot2)
 
 ## run initialization (see initialization template script for details)
 
-setwd(".")
-
 source("initialize.R")
 
 bibtex::write.bib(c("vegan","stats","pairwiseAdonis","GUniFrac","psych"), file = "rpackages.bib")
@@ -24,6 +22,15 @@ load("GenUniFrac_unweighted.RD") # unweighted UniFrac distance matrix
 load("GenUniFrac_weighted.RD") # weighted UniFrac distance matrix
 
 source("functions.R") # access to all of the functions used in this script
+
+first.str <- function(x){
+  y <- strsplit(as.character(x), split=" ")
+  z <- vector("character", length = length(y))
+  for (i in 1:length(z)){z[i]<-y[[i]][1]}
+  return(z)
+}
+
+tax <- data.frame(tax, taxonomy2=first.str(tax$taxonomy)) # change lowest taxonomic level to minimum genus
 
 
 ## identify predominant taxa
@@ -45,15 +52,13 @@ common5.t <- core.id(comm5[row.names(comm5)%in%meta$SampleID[meta$Infection=="TK
 mb5.t <- core.stack(comm5, common5.t, tax, meta, "BodySite", "Infection", "tag.name",
                   0.01, 1, "5dpiTKMNtoALL", core.only=T, fixed=T, landscape=F, view.all=T, facet=F) # project those ASVs across other treatments and set abundance threshold to 1%
 
-gens <- unique(as.character(tax$genus[match(unique(c(as.character(mb5.m$otu), as.character(mb5.c$otu), as.character(mb5.t$otu))), tax$tag.name)])) # get genus names for the predominant ASVs from all three subsets
 
-any(gens=="") # if any predominant ASVs have not been assigned a genus, remove them from this list
-gens <- gens[-which(gens=="")]
+mb.asv <- unique(c(as.character(mb5.m$otu), as.character(mb5.c$otu), as.character(mb5.t$otu)))
 
-save(gens, file="predominantgenera.RD") ## save this file for later
+taxes <- unique(as.character(tax$taxonomy2[match(mb.asv, tax$tag.name)])) # get genus names for the predominant ASVs from all three subsets
+save(taxes, file="predominanttaxa.RD") ## save this file for later
 
-asvs <- tax$tag[tax$genus%in%gens] # find all ASVs ascribed to the named predominant genera
-
+asvs <- tax$tag[tax$taxonomy2%in%taxes]
 save(asvs, file="predominantasvs.RD") ## save this file for later
 
 
@@ -73,12 +78,12 @@ richness <- rbind(data.frame(rbind( # bind together alpha diversity output table
                                    data.frame(alpha.boxplots(comm14, meta, "CE", "Infection", F), BodySite="CEC"),
                                    data.frame(alpha.boxplots(comm14, meta, "IL", "Infection", F), BodySite="ILE")), dpi="14DPC"))
 
-jpeg("coreplots/richness.jpeg", width=5200, height=1800, res=600) # open the .jpeg device
-ggplot(richness, aes(group.id, rich, fill=group.id)) + # print the graph to the device - make sure your variable names are correct!
-  facet_grid(dpi ~ BodySite) + geom_boxplot() + ggthemes::theme_few() + ylab("Observed ASVs") + xlab("") + 
-  theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), panel.spacing.x = unit(0.8, "lines"),
-        axis.text.y = element_text(angle=90, size=7, hjust=0.25, vjust=0.5, face="bold"))
-dev.off() # close the device
+rich <- ggplot(subset(richness, subset=dpi=="5DPC"), aes(group.id, rich, fill=group.id)) + # print the graph to the device - make sure your variable names are correct!
+          facet_grid(dpi ~ BodySite) + geom_boxplot(show.legend=F) + ggthemes::theme_few() + ylab("Observed ASVs") + xlab("") + 
+          theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.title=element_text(size=10),
+                axis.text.y = element_text(angle=90, size=7, hjust=0.25, vjust=0.5, face="bold"), 
+                panel.spacing.x = unit(0.8, "lines"), plot.margin = margin(0,3,0,0), strip.text = element_blank()) +
+          scale_y_continuous(limits=c(0,150))
 
 
 ## beta diversity plots for 5dpi samples for each body site
@@ -91,11 +96,11 @@ for (i in c("SW", "TW", "LL", "CE", "IL")){bdist5.wd[[i]] <- bdist5[grep(i, row.
 
 save(bdist5.wd, file="GUniFrac_weighted_5dpi.RD") ## save this file
 
-pcoa.centroids(bdist5.wd$SW, meta, "Infection", "default", F) # draw PCOA and output statistical analysis for each body site matrix
-pcoa.centroids(bdist5.wd$TW, meta, "Infection", "default", F)
-pcoa.centroids(bdist5.wd$LL, meta, "Infection", "default", F)
-pcoa.centroids(bdist5.wd$CE, meta, "Infection", "default", F)
-pcoa.centroids(bdist5.wd$IL, meta, "Infection", "default", F)
+pcoas <- rbind(data.frame(pcoa.centroids(bdist5.wd$SW, meta, "Infection", "default", F), BodySite="NAS"), # draw PCOA and output statistical analysis for each body site matrix
+               data.frame(pcoa.centroids(bdist5.wd$TW, meta, "Infection", "default", F), BodySite="TRA"),
+               data.frame(pcoa.centroids(bdist5.wd$LL, meta, "Infection", "default", F), BodySite="LRT"),
+               data.frame(pcoa.centroids(bdist5.wd$CE, meta, "Infection", "default", F), BodySite="CEC"),
+               data.frame(pcoa.centroids(bdist5.wd$IL, meta, "Infection", "default", F), BodySite="ILE")) %>% data.frame(DPI="5DPC")
 
 
 ## beta diversity plots for 14dpi samples for each body site
@@ -108,51 +113,72 @@ for (i in c("SW", "TW", "LL", "CE", "IL")){bdist14.wd[[i]] <- bdist14[grep(i, ro
 
 save(bdist14.wd, file="GUniFrac_weighted_14dpi.RD") ## save this file
 
-pcoa.centroids(bdist14.wd$SW, meta, "Infection", "default", F) # draw PCOA and output statistical analysis for each body site matrix
-pcoa.centroids(bdist14.wd$TW, meta, "Infection", "default", F)
-pcoa.centroids(bdist14.wd$LL, meta, "Infection", "default", F)
-pcoa.centroids(bdist14.wd$CE, meta, "Infection", "default", F)
-pcoa.centroids(bdist14.wd$IL, meta, "Infection", "default", F)
+pcoas <- rbind(pcoas,
+               rbind(data.frame(pcoa.centroids(bdist14.wd$SW, meta, "Infection", "default", F), BodySite="NAS"), # draw PCOA and output statistical analysis for each body site matrix
+                     data.frame(pcoa.centroids(bdist14.wd$TW, meta, "Infection", "default", F), BodySite="TRA"),
+                     data.frame(pcoa.centroids(bdist14.wd$LL, meta, "Infection", "default", F), BodySite="LRT"),
+                     data.frame(pcoa.centroids(bdist14.wd$CE, meta, "Infection", "default", F), BodySite="CEC"),
+                     data.frame(pcoa.centroids(bdist14.wd$IL, meta, "Infection", "default", F), BodySite="ILE")) %>% data.frame(DPI="14DPC"))
 
+pc <- ggplot(subset(pcoas, subset=DPI=="5DPC")) + 
+  facet_wrap(vars(DPI, BodySite), ncol=5, scales = "free") + # print the graph to the device - make sure your variable names are correct!
+  geom_hline(yintercept=0, color="grey80", linetype="dotdash") +
+  geom_vline(xintercept=0, color="grey80", linetype="dotdash") +
+  geom_segment(aes(x=Axis.1, xend=centroid.1, y=Axis.2, yend=centroid.2, color=factor), alpha=0.5, size=0.5) +
+  geom_point(aes(Axis.1, Axis.2, fill=factor), alpha=0.5, shape=21, size=1.5) + 
+  geom_point(aes(centroid.1, centroid.2, fill=factor), alpha=0.75, shape=24, size=2) + 
+  ggthemes::theme_few() + ylab("PC2") + xlab("PC1") + 
+  theme(axis.text.x = element_text(size=7, face="bold"), strip.text = element_blank(), plot.margin = margin(0,3,0,0),
+        axis.text.y = element_text(angle=90, size=7, hjust=0.5, vjust=0.5, face="bold"), axis.title=element_text(size=10),
+        legend.title = element_blank(), legend.position = "bottom", legend.justification = "left")
 
 ## analysis of 16S rRNA copy distribution per ng of sample DNA
 
 
-jpeg("coreplots/16SCopies.jpeg", width=5200, height=1800, res=600) # open the .jpeg device
-ggplot(droplevels(meta[meta$Infection!="NEG"&meta$DPI!="13DPC",]), aes(Infection, ratio_16s, fill=Infection)) + # print the graph to the device - make sure your variable names are correct!
-  facet_grid(DPI ~ BodySite) + geom_boxplot() + ggthemes::theme_few() + ylab("Copies/ng of DNA") + xlab("") + 
-  theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), panel.spacing.x = unit(0.8, "lines"),
-                         axis.text.y = element_text(angle=90, size=7, hjust=0.25, vjust=0.5, face="bold")) +
-  scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
-                labels = scales::trans_format("log10", scales::math_format(10^.x)))
-dev.off() # close the device
+copies16 <- droplevels(meta[meta$Infection!="NEG"&meta$DPI!="13DPC", c("SampleID", "ratio_16s", "DPI", "BodySite", "Infection","BodySiteInf")])
+copies16$BodySite <- factor(copies16$BodySite, labels=c("Nasal","Trachea","LRT","Cecum","Ileum"))
+
+copies <- ggplot(subset(copies16, subset=DPI=="5DPC"), aes(Infection, ratio_16s, fill=Infection)) + # print the graph to the device - make sure your variable names are correct!
+              facet_grid(DPI ~ BodySite) + geom_boxplot(show.legend=F) + ggthemes::theme_few() + ylab("Copies/ng of DNA") + xlab("") + 
+              theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), panel.spacing.x = unit(0.8, "lines"),
+                    axis.text.y = element_text(angle=90, size=7, hjust=0.25, vjust=0.5, face="bold"), axis.title=element_text(size=10),
+                    strip.text.y = element_blank(), strip.text.x = element_text(face="bold", size=14), plot.margin=margin(0,3,0,0)) +
+              scale_y_log10(breaks = scales::trans_breaks("log10", function(x) 10^x),
+                            labels = scales::trans_format("log10", scales::math_format(10^.x)),
+                            limits = c(10^-2, 10^6))
 
 sink("coreplots/16SCopies.txt") # create and open a .txt file
-pairwise.wilcox.test(x=meta[meta$DPI=="14DPC" & meta$Infection!="NEG", "ratio"], # print this output to the text file
-                     g=meta[meta$DPI=="14DPC" & meta$Infection!="NEG", "BodySiteInf"],
+pairwise.wilcox.test(x=copies16[copies16$DPI=="14DPC", "ratio_16s"], # print this output to the text file
+                     g=copies16[copies16$DPI=="14DPC", "BodySiteInf"],
                      p.adjust.method = "holm")
-pairwise.wilcox.test(x=meta[meta$DPI=="5DPC" & meta$Infection!="NEG", "ratio"], # print this output to the text file
-                     g=meta[meta$DPI=="5DPC" & meta$Infection!="NEG", "BodySiteInf"],
+pairwise.wilcox.test(x=copies16[copies16$DPI=="5DPC", "ratio_16s"], # print this output to the text file
+                     g=copies16[copies16$DPI=="5DPC", "BodySiteInf"],
                      p.adjust.method = "holm")
 sink() # close the file
 
+jpeg("coreplots/Figure3.jpeg", width=4300, height=2900, res=600)
+egg::ggarrange(copies, rich, pc, ncol=1, padding=unit(0.1, "line"))
+dev.off()
 
 ## quantify changes in abundance for predominant genera
 
-dysb.5 <- facet.updown(comm5[,asvs], tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 5dpi data
-                     filename="5dpi_from5dpiMOCK", level="genus", w=2180, h=1500, set.lim = 10) %>%
+dysb.5 <- (apply(comm5, 1, ra)*100) %>% t(.) %>% .[,asvs] %>%
+  facet.updown(tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 5dpi data
+               filename="5dpi_from5dpiMOCK_ra", level="taxonomy2", w=2180, h=1500, set.lim = 6) %>%
   group_by(group, Infection) %>% summarize_at(vars(Log2.Abundance), funs(mean)) %>% .[-which(.[,"Infection"]=="Mock"),] # this small object shows the mean increase/decrease for affected genera
 
-dysb.14 <- facet.updown(comm14[,asvs], tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 14dpi data
-                     filename="14dpi_from5dpiMOCK", level="genus", w=2180, h=1500, set.lim = 10) %>%
+dysb.14 <- (apply(comm14, 1, ra)*100) %>% t(.) %>% .[,asvs] %>%
+  facet.updown(tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 14dpi data
+               filename="14dpi_from5dpiMOCK_ra", level="taxonomy2", w=2180, h=1500, set.lim = 6) %>%
   group_by(group, Infection) %>% summarize_at(vars(Log2.Abundance), funs(mean)) %>% .[-which(.[,"Infection"]=="Mock"),] # this small object shows the mean increase/decrease for affected genera
 
-ra.comm <- apply(comm5, 1, ra)*100
-facet.updown(t(ra.comm)[,asvs], tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 5dpi data
-             filename="5dpi_from5dpiMOCK_ra", level="genus", w=2180, h=1500)
-ra.comm <- apply(comm14, 1, ra)*100
-facet.updown(t(ra.comm)[,asvs], tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 5dpi data
-             filename="14dpi_from5dpiMOCK_ra", level="genus", w=2180, h=1500)
+inf.5 <- (apply(comm5, 1, ra)*100) %>% t(.) %>% .[row.names(.)%in%meta$SampleID[meta$Infection!="Mock"],asvs] %>%
+  facet.updown(tax, meta, "BodySite", "Infection", "TKMN", # draw plot and output statistics for 5dpi data
+               filename="5dpi_from5dpiINF_ra", level="taxonomy2", w=2180, h=1500, set.lim = 6) 
+
+inf.14 <- (apply(comm14, 1, ra)*100) %>% t(.) %>% .[row.names(.)%in%meta$SampleID[meta$Infection!="Mock"],asvs] %>%
+  facet.updown(tax, meta, "BodySite", "Infection", "Mock", # draw plot and output statistics for 14dpi data
+               filename="14dpi_from5dpiINF_ra", level="taxonomy2", w=2180, h=1500, set.lim = 6)
 
 ## visualize correlation of predominant genera to gene expression
 
@@ -161,8 +187,10 @@ ct.cyts <- c("CT_IFN.g","CT_IFN.l", "CT_OAS", "CT_Mx","CT_IL4","CT_IL5","CT_IL6"
 
 for (c in cyts){ # go through cyts iteratively; they will save to separate folders
   cyt.regression(comm5[row.names(comm5) %in% meta$SampleID[meta$BodySite == "TRA"],], # plots show scatterplots and regressions with equations 
-                 tax, meta[meta$DPI == "5DPC" & meta$BodySite == "TRA" & meta$Infection != "NEG",], select=gens, c, "BodySite", "Infection")
+                 tax, meta[meta$DPI == "5DPC" & meta$BodySite == "TRA" & meta$Infection != "NEG",], select=taxes, c, "BodySite", "Infection")
 }
+
+
 
 mar <- robust.threshold(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite!="LRT"],], meta, "BodySite", "Infection", asvs) # check robustness of margin choice
 
@@ -171,18 +199,38 @@ common <- core.id(comm5[,asvs], meta, tax, "BodySite", "Infection", 0.01) # pres
 concat <- list("CEC"=list("Mock"=unique(unlist(common$CEC))), "ILE"=list("Mock"=unique(unlist(common$ILE))), # have to trick the function into using the same ASV list for all treatments
                "NAS"=list("Mock"=unique(unlist(common$NAS))), "TRA"=list("Mock"=unique(unlist(common$TRA))))
 
-mb <- core.stack(comm5, concat, tax, meta, "BodySite", "Infection", "genus", # this data table describes the consensus distribution of predominant genera present in each site
-                 0.005, 0.01, "_predominantgenera", core.only=T, fixed=T, landscape=T, view.all=T, facet=T)
+mb <- core.stack(comm5, concat, tax, meta, "BodySite", "Infection", "taxonomy2", # this data table describes the consensus distribution of predominant genera present in each site
+                 0.005, 0.01, "_predominanttaxa", core.only=T, fixed=T, landscape=T, view.all=T, facet=T)
 
 regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite=="TRA" & meta$Infection!="NEG"], ], # this produces the correlation heatmap summarizing the regressions discussed above
                     tax, meta[meta$BodySite=="TRA" & meta$DPI=="5DPC",], as.character(unique(mb$otu[mb$groupvar=="TRA"])), 
-                    cyts, "BodySite", 10, "UT_cytokines_TRAonly", "cor", 1200, 1050, F, 1, NULL)
-regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite=="CEC" & meta$Infection!="NEG"], ], # this produces the correlation heatmap summarizing the regressions discussed above
-             tax, meta[meta$BodySite=="CEC" & meta$DPI=="5DPC",], as.character(unique(mb$otu[mb$groupvar=="CEC"])), 
-             ct.cyts, "BodySite", 10, "CT_cytokines_CEConly", "cor", 1200, 1050, F, 1, NULL)
+                    cyts, "BodySite", 10, "UT_cytokines_TRAonly", "cor", 1200, 1200, F, 1, NULL)
+regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite=="TRA" & !meta$Infection%in%c("NEG","TKMN")], ], # this produces the correlation heatmap summarizing the regressions discussed above
+             tax, meta[meta$BodySite=="TRA" & meta$DPI=="5DPC",], as.character(unique(mb$otu[mb$groupvar=="TRA"])), 
+             cyts, "BodySite", 10, "UT_cytokines_TRAonly_CKPA", "cor", 1200, 1200, F, 1, NULL)
+regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite=="TRA" & !meta$Infection%in%c("NEG","CKPA")], ], # this produces the correlation heatmap summarizing the regressions discussed above
+             tax, meta[meta$BodySite=="TRA" & meta$DPI=="5DPC",], as.character(unique(mb$otu[mb$groupvar=="TRA"])), 
+             cyts, "BodySite", 10, "UT_cytokines_TRAonly_TKMN", "cor", 1200, 1200, F, 1, NULL)
 
-write.csv(read.csv("coreplots/cytokines/heatmapdata_UT_cytokines_TRAonly.csv") %>% 
-            reshape2::dcast(genus ~ factor, value.var = "value"), "../TableS1.csv")
+pull.sig <- read.csv("coreplots/cytokines/heatmapdata_UT_cytokines_TRAonly.csv")
+
+write.csv(pull.sig %>% reshape2::dcast(taxonomy2 ~ factor, value.var = "value"), "../TableS1.csv")
+
+sig.only <- data.frame()
+for (c in cyts[c(2,3,4,5,7)]){ # go through cyts iteratively; they will save to separate folders
+  sig.only <- rbind(sig.only,
+    cyt.regression(comm5[row.names(comm5) %in% meta$SampleID[meta$BodySite == "TRA"],], # plots show scatterplots and regressions with equations 
+                   tax, meta[meta$DPI == "5DPC" & meta$BodySite == "TRA" & meta$Infection != "NEG",], 
+                   select=taxes[c(5,13,18,21:23)], c, "BodySite", "Infection")
+  )
+}
+
+
+ggplot(sig.only, aes(abund, FC, color=Infection, shape=Infection)) + # print the graph to the device - make sure your variable names are correct!
+  facet_grid(cyt ~ taxon) + geom_point() + ggthemes::theme_few() + ylab("Fold Change") + xlab("log2 abund at 5dpi") + 
+  theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), panel.spacing.x = unit(0.8, "lines"),
+        axis.text.y = element_text(angle=90, size=7, hjust=0.25, vjust=0.5, face="bold"))
+
 
 ## visualize correlation of predominant genera to viral titer
 
@@ -190,32 +238,73 @@ sites <- c("NAS", "TRA", "CEC", "ILE") # names of sites with viral titer data at
 
 for (s in sites){ # these plots will all go in the same folder
   cyt.regression(comm5[row.names(comm5) %in% meta$SampleID[meta$BodySite == s],], # plots show scatterplots and regressions with equations  
-                 tax, meta[meta$DPI == "5DPC" & meta$BodySite == s & meta$Infection != "NEG",], select=gens, "EID50.mL", "BodySite", "Infection")
+                 tax, meta[meta$DPI == "5DPC" & meta$BodySite == s & meta$Infection != "NEG",], select=taxes, "EID50.mL", "BodySite", "Infection")
+  cyt.regression(comm5[row.names(comm5) %in% meta$SampleID[meta$BodySite == s],], # plots show scatterplots and regressions with equations  
+                 tax, meta[meta$DPI == "5DPC" & meta$BodySite == s & meta$Infection != "NEG",], select=taxes, "BodyWt_g", "BodySite", "Infection")
 }
 
-regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite!="LRT"], asvs], tax[tax$tag%in%asvs,], meta[meta$BodySite!="LRT" & meta$DPI=="5DPC",], 
-             gens, "EID50.mL", "BodySite", 10, "ALL_titers", "cor", 975, 1450, T, 1, NULL)  # this produces the correlation heatmap summarizing the regressions discussed above
-regr.heatmap(comm5[, asvs], tax[tax$tag%in%asvs,], meta[meta$DPI=="5DPC"&meta$Infection!="NEG",], 
-             gens, "BodyWt_g", "BodySite", NULL, "ALL_weights", "cor", 975, 1450, T, 1, NULL)  # this produces the correlation heatmap summarizing the regressions discussed above
+regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite!="LRT"], asvs], tax[tax$tag%in%asvs,], 
+             meta[meta$BodySite!="LRT" & meta$DPI=="5DPC",], 
+             taxes, "EID50.mL", "BodySite", 10, "ALL_titers", "cor", 975, 1700, T, 1, NULL) # this produces the correlation heatmap summarizing the regressions discussed above
+regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite!="LRT"], asvs], tax[tax$tag%in%asvs,],
+             meta[meta$BodySite!="LRT" & meta$DPI=="5DPC" & !meta$Infection%in%c("NEG","TKMN"),], 
+             taxes, "EID50.mL", "BodySite", 10, "ALL_titers_CKPA", "cor", 975, 1700, T, 1, NULL)
+regr.heatmap(comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite!="LRT"], asvs], tax[tax$tag%in%asvs,],
+             meta[meta$BodySite!="LRT" & meta$DPI=="5DPC" & !meta$Infection%in%c("NEG","CKPA"),], 
+             taxes, "EID50.mL", "BodySite", 10, "ALL_titers_TKMN", "cor", 975, 1700, T, 1, NULL)
 
-write.csv(read.csv("coreplots/cytokines/heatmapdata_ALL_weights.csv") %>% reshape2::dcast(genus ~ group, value.var = "value"),
+
+regr.heatmap(comm5[, asvs], tax[tax$tag%in%asvs,], meta[meta$DPI=="5DPC"&meta$Infection!="NEG",], 
+             taxes, "BodyWt_g", "BodySite", NULL, "ALL_weights", "cor", 1025, 1700, T, 1, NULL)  # this produces the correlation heatmap summarizing the regressions discussed above
+regr.heatmap(comm5[, asvs], tax[tax$tag%in%asvs,], meta[meta$DPI=="5DPC" & !meta$Infection%in%c("NEG","TKMN"),], 
+             taxes, "BodyWt_g", "BodySite", NULL, "ALL_weights_CKPA", "cor", 1025, 1700, T, 1, NULL)
+regr.heatmap(comm5[, asvs], tax[tax$tag%in%asvs,], meta[meta$DPI=="5DPC" & !meta$Infection%in%c("NEG","CKPA"),], 
+             taxes, "BodyWt_g", "BodySite", NULL, "ALL_weights_TKMN", "cor", 1025, 1700, T, 1, NULL)
+
+
+meta.cyt <- meta[meta$BodySite=="TRA" & meta$DPI=="5DPC" & meta$Infection!="NEG", c("SampleID", cyts)] %>%
+  reshape2::melt() %>% left_join(meta[,c("SampleID","EID50.mL","Infection")]) %>%
+  mutate(., CKPA=value, TKMN=value)
+meta.cyt$TKMN[meta.cyt$Infection=="CKPA"] <- NA
+meta.cyt$CKPA[meta.cyt$Infection=="TKMN"] <- NA
+
+
+ggplot(meta.cyt, aes(EID50.mL, value, shape=Infection, color=Infection)) + 
+  geom_point(size=2) +
+  facet_wrap(vars(variable), ncol=4) +
+  scale_shape_manual(values=c(7,18,8)) +
+  theme_bw() +   ylab("Fold Change") +
+  theme(panel.grid.minor.x = element_line(color="white"),
+        panel.grid.minor.y = element_line(color="white"),
+        panel.grid.major.x = element_line(linetype = "dashed", size=0.5),
+        panel.grid.major.y = element_line(linetype = "dashed", size=0.5)) +
+  stat_smooth(aes(EID50.mL, CKPA), method="lm", se=T, size=0.5, inherit.aes = F, color="blue") +
+  ggpmisc::stat_poly_eq(inherit.aes = F, formula=y ~ x, parse=T, label.x = "left", label.y=1, size=2.5,
+                        aes(x=EID50.mL, y=CKPA, label=paste(stat(eq.label), stat(rr.label), sep="~~~~")), color="blue") +
+  stat_smooth(aes(EID50.mL, TKMN), method="lm", se=T, size=0.5, inherit.aes = F, color="chartreuse4") +
+  ggpmisc::stat_poly_eq(inherit.aes = F, formula=y ~ x, parse=T, label.x = "left", label.y=0.95, size=2.5,
+                        aes(x=EID50.mL, y=TKMN, label=paste(stat(eq.label), stat(rr.label), sep="~~~~")), color="chartreuse4") 
+ggsave("coreplots/correlation_EID50_cytokines.jpeg", width=9, height=6, dpi=300)
+
+
+write.csv(read.csv("coreplots/cytokines/heatmapdata_ALL_weights.csv") %>% reshape2::dcast(taxonomy2 ~ group, value.var = "value"),
           "coreplots/correlation_weights.csv")
 ## produce NMDS of common predominant genera per body site and k-means clusters
 
 ls <- list() # initialize list to store NMDS and k-means output
 for (i in sites){ # iterate across body sites
   comm.rmv <- comm5[row.names(comm5)%in%meta$SampleID[meta$BodySite==i], asvs] %>% # community table made up of ASVs ascribed to predominant genera
-    t() %>% data.frame(tag=row.names(.)) %>% right_join(tax[,c("tag", "genus")], .) %>% .[,-1] %>% # match genus names to ASV tags
-    group_by(genus) %>% summarize_all(funs(sum)) %>% as.data.frame() %>% # add read counts of that genus together
-    .[which(.[,"genus"]%in%as.character(unique(mb$otu[mb$groupvar==i]))),] %>% `row.names<-` (.[,"genus"]) %>% .[,-1] # subset genera down to those predominant in the current body site 
+    t() %>% data.frame(tag=row.names(.)) %>% right_join(tax[,c("tag", "taxonomy2")], .) %>% .[,-1] %>% # match genus names to ASV tags
+    group_by(taxonomy2) %>% summarize_all(funs(sum)) %>% as.data.frame() %>% # add read counts of that genus together
+    .[which(.[,"taxonomy2"]%in%as.character(unique(mb$otu[mb$groupvar==i]))),] %>% `row.names<-` (.[,"taxonomy2"]) %>% .[,-1] # subset genera down to those predominant in the current body site 
   k <- kmeans(vegan::metaMDS(t(comm.rmv),"bray", trymax = 1200, autotransform = F)[[35]], 3, 100, 20) # perform NMDS and get k-means clusters out of MDS1 and MDS2
-  m <- cbind(vegan::metaMDS(t(comm.rmv),"bray", trymax = 1200, autotransform = F)[[35]], k$cluster) %>% data.frame(genus=row.names(.)) # bind NMDS axis data to k-means clusters
+  m <- cbind(vegan::metaMDS(t(comm.rmv),"bray", trymax = 1200, autotransform = F)[[35]], k$cluster) %>% data.frame(taxonomy2=row.names(.)) # bind NMDS axis data to k-means clusters
   ls[[i]] <- m # save to list
 }
 
 titers <- read.csv("coreplots/cytokines/heatmapdata_ALL_titers.csv") # this data table was output by the heatmap function
 
-titers$genus <- gsub("\\.", "-", titers$genus) # must adjust the characters so genus names match between tables
+titers$taxonomy2 <- gsub("\\.", "-", titers$taxonomy2) # must adjust the characters so genus names match between tables
 
 kmeans <- left_join(titers, rbind(data.frame(ls$NAS, group="NAS"), data.frame(ls$TRA, group="TRA"), # join the viral titer correlation data to k-means cluster 
                                   data.frame(ls$CEC, group="CEC"), data.frame(ls$ILE, group="ILE"))) %>% .[!is.na(.[,"V3"]),] # genera not common in a particular site are removed
@@ -228,17 +317,17 @@ kmeans <- left_join(kmeans, k1[,c(1,2,4,5)]) # join new group designations to th
 
 kmeans$reorder <- factor(kmeans$reorder, labels=c("C", "B", "A")) # rename the grouping factor
 
-kmeans <- mutate(kmeans, GroupGen=paste(reorder, genus, sep="_")) %>% .[order(.$group, .$reorder, .$genus),] %>%
+kmeans <- mutate(kmeans, GroupGen=paste(reorder, taxonomy2, sep="_")) %>% .[order(.$group, .$reorder, .$taxonomy2),] %>%
   data.frame(Y=c(1:dim(kmeans)[1])) %>% group_by(group, reorder) %>% mutate(., mean=mean(Y)) # this is for reshaping the graph to be more aesthetic
 
-titers <- reshape2::dcast(kmeans, genus ~ group, value.var = "value") # reshape the table into wide form
+titers <- reshape2::dcast(kmeans, taxonomy2 ~ group, value.var = "value") # reshape the table into wide form
 
 write.csv(titers, "coreplots/correlation viraltiters.csv") # save as output table
 
 save(kmeans, file="kmeans_clusters.RD") # save for later
 
-jpeg("coreplots/genus-titer_correlationchart.jpeg", width=2000, height=2000, res=300) # open the graphics device
-ggplot(kmeans, aes(Y, value, fill=reorder, group=genus, label=genus)) + facet_wrap(vars(group), nrow=2, dir="v", scales="free_y") + # print graph to device
+jpeg("coreplots/titer_correlationchart.jpeg", width=2000, height=2000, res=300) # open the graphics device
+ggplot(kmeans, aes(Y, value, fill=reorder, group=taxonomy2, label=taxonomy2)) + facet_wrap(vars(group), nrow=2, dir="v", scales="free_y") + # print graph to device
   geom_col(position=position_dodge(width=0.95), color="white", width=0.95) +
   geom_text(aes(label=signif, hjust=scales::rescale(value/abs(value))), size=8, nudge_x = -0.3) +
   geom_hline(yintercept=0, color="grey80", linetype="dotdash") +
@@ -247,7 +336,7 @@ ggplot(kmeans, aes(Y, value, fill=reorder, group=genus, label=genus)) + facet_wr
   scale_x_continuous(breaks=kmeans$mean, labels=kmeans$reorder) +
   geom_text(aes(y=0, hjust=scales::rescale(value/abs(value))), 
             vjust=0.25, position=position_dodge(width=0.95), size=3) +
-  ylab("Pearson's correlation coefficient\n(relative abundance vs. viral titer)") + xlab("k-means group\n(NMDS-derived)") +
+  ylab("Spearman correlation\n(relative abundance vs. viral titer)") + xlab("k-means group\n(NMDS-derived)") +
   coord_flip() + guides(fill=F) + ggthemes::theme_few() + theme(axis.text.y = element_text(face="bold", size=12))
 dev.off() # close the device
 

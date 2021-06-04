@@ -179,12 +179,12 @@ sink(paste("./coreplots/pcoa/", deparse(substitute(dist)), "/PCOA_",
            paste(factor, connect.by, filename, sep="_"), ".txt", sep=""))
 cat("Variance explained: ", "\n",
              paste("PC1 (", as.character(varexp[1]), "%)"), "\n",
-             paste("PC2 (", as.character(varexp[1]), "%)"),
+             paste("PC2 (", as.character(varexp[2]), "%)"),
              "\n","\n","~~~ * ~~~","\n","\n")
 print(vegan::adonis(dist ~ pcoa[,factor]))
 print(pairwiseAdonis::pairwise.adonis(dist, pcoa[,factor]))
 print(vegan::betadisper(as.dist(dist), pcoa[,factor], type = "centroid"))
 sink()
 
-return(centroids)
+return(samples)
 }

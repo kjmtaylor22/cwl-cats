@@ -161,7 +161,7 @@ bact.tax <- function(taxonomy, full=FALSE, database=NULL){
   }
   
   pull <- c(grep("Chloroplast", taxonomy[,2], ignore.case = T), grep("Mitochondria", taxonomy[,2], ignore.case = T))
-  taxonomy <- taxonomy[-pull,]
+  if (length(pull)>0){taxonomy <- taxonomy[-pull,]}
   
   separated <- sapply(as.character(taxonomy[,2]), FUN=splt)
   trimmed <- lapply(separated, FUN=trim)

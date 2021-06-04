@@ -195,7 +195,7 @@ core.stack <- function(data, list, tax=NULL, factors, group, subgroup, hi.tax="t
       pull <- grouped$otu[which(grouped$rel.abund > threshold)]
       pull <- pull[which(duplicated(pull)==FALSE)]
       grouped <- grouped[which(grouped$otu%in%pull),]
-      group.core <- cbind(grouped, core=rep("core", dim(grouped)[1]))
+      group.core <- data.frame(grouped, core="core")
     }
     
     if (core.only==FALSE){

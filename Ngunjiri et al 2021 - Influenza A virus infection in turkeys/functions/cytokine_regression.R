@@ -35,25 +35,29 @@ cyt.regression <- function(comm, tax, meta, select, cyt, group, subgroup, stdv=N
 
   assoc.table <- list()
   
+  for (i in dim(tax)[2]){
+    if(all(select%in%tax[,i])){find <- names(tax)[i];break}else{next}
+  }
+  
   for (i in g){
     sub <- comm[row.names(comm)%in%meta$SampleID[meta[,group]==i],
-                names(comm)%in%tax$tag[tax$genus%in%assoc.list2[[i]]]] %>%
+                names(comm)%in%tax$tag[tax[,find]%in%assoc.list2[[i]]]] %>%
       
       t() %>%  
       
       data.frame(tag=row.names(.), .) %>%  
       
-      left_join(tax[,c("tag", "genus")]) %>%
+      left_join(tax[,c("tag", find)]) %>%
       
       .[,-1] %>% 
         
-      group_by(genus) %>% 
+      group_by_(find) %>% 
       
       summarize_all(funs(sum)) %>% 
       
       as.data.frame() %>% 
       
-      `rownames<-` (as.character(.[,"genus"])) %>% 
+      `rownames<-` (as.character(.[,find])) %>% 
       
       .[,-1] %>% 
       
@@ -74,7 +78,7 @@ cyt.regression <- function(comm, tax, meta, select, cyt, group, subgroup, stdv=N
   }
   
 
-  
+  assoc.df <- data.frame()
   for (i in names(assoc.table)){
     p <- ggplot(assoc.table[[i]], aes(eval(parse(text=cyt)), log2(value+1), shape=eval(parse(text=subgroup)), color=variable)) + 
       geom_point(size=2) +
@@ -95,10 +99,17 @@ cyt.regression <- function(comm, tax, meta, select, cyt, group, subgroup, stdv=N
       xlab(bquote(paste("log"[.(2)]," at 5 dpi"))) + 
       ylab(bquote(paste("log"[.(2)],"(Abundance)")))
     
-    tiff(file=paste0("./coreplots/cytokines/", cyt, "/", i, ".tiff"), width=2500, 
+    tiff(file=paste0("./coreplots/cytokines/", cyt, "/", i, length(select), ".tiff"), width=2500, 
          height=(450*ceiling(length(unlist(unique(assoc.table[[i]]["variable"])))/4)), pointsize=10, res=250)  
     print(p)
     dev.off()
+  
+    tmp <- data.frame(assoc.table[[i]], cyt=cyt)
+    names(tmp) <- c("SampleID","taxon","abund",subgroup,"FC","cyt")
+    
+    assoc.df <- rbind(assoc.df, tmp)
+    
   }
-  return(assoc.table)
+  
+  return(assoc.df)
 }

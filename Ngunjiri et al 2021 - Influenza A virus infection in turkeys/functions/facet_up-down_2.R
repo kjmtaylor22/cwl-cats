@@ -104,23 +104,23 @@ facet.updown <- function(comm, tax, meta, group, subgroup, control.grp, folder=S
   
   p <- ggplot(final, aes(eval(parse(text=subgroup)), eval(parse(text=level)))) +
     geom_raster(aes(fill=Log2.Abundance)) +
-    geom_text(aes(label=signif), size=30, nudge_y = -0.3) +
+    geom_text(aes(label=signif), size=8, nudge_y = -0.3) +
     facet_wrap(vars(group), dir="h", nrow=1, strip.position = "top") +
     scale_fill_gradientn(colors=c("blue", "white", "red"), 
                          guide="colorbar", limits=lims, breaks=sort(c(lims, 0)),
                          labels=as.character(sort(c(round(lims), 0)))) +
     theme_bw()+
     theme(axis.ticks=element_line(color="white"), 
-          axis.text.x=element_text(angle=90, size=50, hjust=1, vjust=0.5, face="bold"),
-          axis.text.y=element_text(size=50, vjust=0.5),
+          axis.text.x=element_text(angle=90, size=10, hjust=1, vjust=0.5, face="bold"),
+          axis.text.y=element_text(size=10, vjust=0.5),
           axis.title=element_blank(),
-          plot.margin = unit(c(1,1,1,1), "cm"),
+          plot.margin = unit(c(1,1,1,1), "mm"),
           plot.caption=element_text(size=40),
           panel.border = element_rect(color="black"),
-          strip.text = element_text(size=60, face="bold"),
+          strip.text = element_text(size=12, face="bold"),
           strip.background = element_rect(color = "white", fill="white"),
-          legend.title=element_text(size=70, face="bold", angle=90, hjust=0.5),
-          legend.text=element_text(size=60, hjust=0),
+          legend.title=element_text(size=15, face="bold", angle=90, hjust=0.5),
+          legend.text=element_text(size=12, hjust=0),
           legend.position = "left",
           legend.direction = "vertical",
           legend.justification = "right",
@@ -130,7 +130,7 @@ facet.updown <- function(comm, tax, meta, group, subgroup, control.grp, folder=S
     guides(fill=guide_colorbar(title=bquote(paste("Differential log"[.(2)]," Abundance")),
                                title.position="left", ticks=F, label.hjust = 0))
   
-  jpeg(paste0("./coreplots/facetupdown/", folder, "/", filename, ".jpeg"), width=w, height=h)
+  jpeg(paste0("./coreplots/facetupdown/", folder, "/", filename, ".jpeg"), width=w, height=h, res=300)
   print(p)
   dev.off()
 

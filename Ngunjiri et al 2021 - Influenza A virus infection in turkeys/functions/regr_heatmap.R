@@ -36,17 +36,21 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
   
   #comm <- apply(comm, MARGIN=1, FUN=ra) %>% t() %>% as.data.frame()
   
-  otu <- tax$tag[tax$genus%in%select.gen] %>% .[.%in%names(comm)]
+  for (i in dim(tax)[2]){
+    if(all(select.gen%in%tax[,i])){find <- names(tax)[i];break}else{next}
+  }
+  
+  otu <- tax$tag[tax[,find]%in%select.gen] %>% .[.%in%names(comm)]
   
   select.gen <- gsub("-", "\\.", select.gen)
   
   data <- data.frame(tag=otu, t(comm[,otu])) %>%
-    left_join(tax[,c("tag", "genus")]) %>%
+    left_join(tax[,c("tag", find)]) %>%
     .[,-1] %>%
-    group_by(genus) %>%
+    group_by_(find) %>%
     summarize_all(funs(sum)) %>%
     as.data.frame() %>%
-    `rownames<-` (as.character(.[,"genus"])) %>%
+    `rownames<-` (as.character(.[,find])) %>%
     .[,-1] %>% t() %>% as.data.frame() %>%
     +1 %>% log2() %>%
     data.frame(SampleID=row.names(.), .) %>% 
@@ -90,7 +94,7 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
       
       if (reg=="cor"){
         
-        R2 <- psych::corr.test(sub[which(!is.na(factor)),], factor[which(!is.na(factor))], adjust="none")
+        R2 <- psych::corr.test(sub[which(!is.na(factor)),], factor[which(!is.na(factor))], method="spearman", adjust="none")
         
         out1 <- rbind(out1, data.frame(t(R2$r), group=i, factor=j))
         out2 <- rbind(out2, data.frame(t(R2$p), group=i, factor=j))
@@ -101,8 +105,8 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
     
   }
 
-  R <- reshape2::melt(out1, variable.name="genus")
-  p <- reshape2::melt(out2, value.name="signif", variable.name="genus")
+  R <- reshape2::melt(out1, variable.name=find)
+  p <- reshape2::melt(out2, value.name="signif", variable.name=find)
   
   #if (reg=="cor"){p$signif <- 1-((1-p$signif)/(length(cyt.list)*length(g)))}
   #if (reg=="slope"){p$signif <- p.adjust(p$signif, "bonferroni")}
@@ -118,26 +122,26 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
   
   out$value[is.nan(out$value)] <- 0
   
-  tax$genus <- gsub("-", "\\.", tax$genus)
+  tax[,find] <- gsub("-", "\\.", tax[,find])
   
-  out <- data.frame(out, phylum=tax$phylum[match(out$genus, tax$genus)])
+  out <- data.frame(out, phylum=tax$phylum[match(out[,find], tax[,find])])
   
-  out$genus <- as.character(out$genus)
+  out[,find] <- as.character(out[,find])
   
-  out <- out[order(out$phylum, out$genus, decreasing=T),]
+  out <- out[order(out$phylum, out[,find], decreasing=T),]
 
-  out$genus <- factor(out$genus, levels=unique(out$genus))
+  out[,find] <- factor(out[,find], levels=unique(out[,find]))
 
   if (set.lim==F){
     lims <- c(-max(abs(out$value), na.rm=T), 
               max(abs(out$value), na.rm=T))
   } else {lims <- c(-set.lim, set.lim)}
   
-  if (max(out$value, na.rm=T)>0.8){sig.col <- "white"} else {sig.col <- "black"}
+  if (any(out$value>0.7, na.rm=T)){sig.col <- "white"} else {sig.col <- "black"}
   
   if (swap==T){
     
-    hm <- ggplot(out, aes(group, genus)) +
+    hm <- ggplot(out, aes(group, eval(parse(text=find)))) +
       facet_wrap(vars(factor), nrow=1, strip.position = "top") +
       #geom_raster(aes(fill=value)) +
       geom_tile(fill="white", color="grey60") +
@@ -146,6 +150,7 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
       scale_color_gradientn(colors=rev(c("red3", "red", "orange", "white", "turquoise", "blue", "navy")), 
                             guide=guide_colorbar(title=element_blank(), ticks.colour="black", frame.colour="black"),
                             limits=lims) +
+      scale_size_continuous(range=c(0,6), limits=c(0,max(lims))) +
       theme(axis.ticks.y=element_blank(),
             axis.ticks.x=element_line(color="grey60"),
             axis.ticks.length.x = unit(0.25, "lines"),
@@ -167,7 +172,7 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
   
   } else {
     
-    hm <- ggplot(out, aes(factor, genus)) +
+    hm <- ggplot(out, aes(factor, eval(parse(text=find)))) +
       facet_wrap(vars(group), nrow=1, strip.position = "top") +
       #geom_raster(aes(fill=value)) +
       geom_tile(fill="white", color="grey60") +
@@ -176,6 +181,7 @@ regr.heatmap <- function(comm, tax, meta, select.gen, cyt.list, group, stdv, nam
       scale_color_gradientn(colors=rev(c("red3", "tomato", "orange", "white", "turquoise", "royalblue", "navy")), 
                             guide=guide_colorbar(title=element_blank(), ticks.colour="black", frame.colour="black"),
                             limits=lims) +
+      scale_size_continuous(range=c(0,6), limits=c(0,max(lims))) +
       theme(axis.ticks.y=element_blank(),
             axis.ticks.x=element_line(color="grey60"),
             axis.ticks.length.x = unit(0.25, "lines"),
